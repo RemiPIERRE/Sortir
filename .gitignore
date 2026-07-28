@@ -1,6 +1,6 @@
 ###> symfony/framework-bundle ###
-/.env
-/.env.local
+.env
+.env.*
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -35,18 +35,18 @@ yarn-error.log
 ###> doctrine ###
 
 # JetBrains (PhpStorm, IntelliJ, WebStorm…)
-/.idea/
+.idea
 *.iml
 *.ipr
 *.iws
 
 # Visual Studio Code
-/.vscode/
+.vscode/
 !.vscode/extensions.json
 *.code-workspace
 
 # Visual Studio
-/.vs/
+.vs/
 *.user
 *.suo
 
@@ -57,7 +57,7 @@ yarn-error.log
 /nbdist/
 
 # Eclipse / PDT
-/.settings/
+.settings/
 .project
 .buildpath
 .classpath
