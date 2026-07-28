@@ -160,7 +160,7 @@ class AppFixtures extends Fixture
         $participants = [];
         foreach ($data as [$key, $mail, $pseudo, $nom, $prenom, $tel, $admin, $actif, $campusKey]) {
             $p = new Participant();
-            $p->setMail($mail);
+            $p->setEmail($mail);
             $p->setPseudo($pseudo);
             $p->setNom($nom);
             $p->setPrenom($prenom);
@@ -193,7 +193,7 @@ class AppFixtures extends Fixture
         array         $participants
     ): void
     {
-        $jour = static fn(int $offset, string $heure = '18:30'): \DateTime => (new \DateTime($heure))->modify(sprintf('%+d days', $offset));
+        $jour = static fn(int $offset, string $heure = '18:30'): \DateTimeImmutable => (new \DateTimeImmutable($heure))->modify(sprintf('%+d days', $offset));
 
         // [nom, etatKey, organisateurKey, lieuKey, campusKey, debutOffset, limiteOffset, duree, max, infos, motif, inscritsKeys]
         $data = [
@@ -262,7 +262,7 @@ class AppFixtures extends Fixture
             $sortie->setDateLimiteInscription($jour($limiteOffset, '23:59'));
             $sortie->setDuree($duree);
             $sortie->setNbInscriptionMax($max);
-            $sortie->setInfosSortie($infos);
+            $sortie->setInfoSortie($infos);
             $sortie->setMotifAnnulation($motif);
             $sortie->setEtat($etats[$etatKey]);
             $sortie->setLieu($lieux[$lieuKey]);

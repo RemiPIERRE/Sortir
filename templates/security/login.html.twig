@@ -7,6 +7,13 @@
 
 
     <h1>Se connecter</h1>
+
+      {% if error %}
+          <div class="alert alert-danger">
+              {{ error.messageKey|trans(error.messageData, 'security') }}
+          </div>
+      {% endif %}
+
     <label for="username">Identifiant</label>
     <input type="text" value="{{ last_username }}" name="_username" id="username"  autocomplete="username" required autofocus>
     <label for="password">Mot de passe</label>
@@ -25,6 +32,6 @@
     </button>
     </form>
     <div>
-        <a href="{{ path('#') }}">Mot de passe oublié ?</a>
+        <a href="#">Mot de passe oublié ?</a>
     </div>
 {% endblock %}
