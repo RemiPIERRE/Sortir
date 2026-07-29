@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+    <h1>Accueil</h1>
+
+    {% if app.user.administrateur %}
+        <a href="#">Administration</a>
+    {% endif %}
+
+    <section class="infos-accueil">
+        <p>Date du jour : {{ "now"|date("d/m/Y") }}</p>
+
+        {% if app.user %}
+            <p>Participant : {{ app.user.pseudo }}</p>
+        {% endif %}
+    </section>
+
+    <form method="get">
+
+        <label for="campus">Campus</label>
+
+        <select id="campus" name="campus">
+
+            <option value="">Tous les campus</option>
+
+            {% for campus in campusList %}
+            <option value="{{ campus.id }}">
+                {{ campus.nom }}
+            </option>
+            {% endfor %}
+        </select>
+
+
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Inscrits / Places</th>
+            <th>État</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.nom }}</td>
+                <td>{{ sortie.dateheureDebut|date('d/m/Y H:i') }}</td>
+                <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
+                <td>{{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}</td>
+                <td>{{ sortie.etat.libelle }}</td>
+                <td>
+                    {% if app.user in sortie.inscrits %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="#">{{ sortie.organisateur.pseudo }}</a>
+                </td>
+                <td>
+                    <a href="#">Afficher</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Aucune sortie disponible.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button">
+        Créer une sortie
+    </button>
+
+
+{% endblock %}
