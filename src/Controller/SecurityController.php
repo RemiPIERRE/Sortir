@@ -9,6 +9,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    // Route Temporaire pour redirection auto vers page de log
+    #[Route(path: '/', name: 'app_home')]
+    public function index(): Response
+    {
+        return $this->render('security/temp_index.html.twig');
+    }
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

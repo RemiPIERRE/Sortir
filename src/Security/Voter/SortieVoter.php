@@ -8,13 +8,17 @@ use App\Entity\Participant;
 use App\Entity\Sortie;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Sortie>
+ */
 class SortieVoter extends Voter
 {
-    public const MODIFIER = 'SORTIE_MODIFIER';
-    public const PUBLIER = 'SORTIE_PUBLIER';
-    public const ANNULER = 'SORTIE_ANNULER';
+    public const EDIT = 'SORTIE_EDIT';
+    public const PUBLISH = 'SORTIE_PUBLISH';
+    public const CANCEL = 'SORTIE_CANCEL';
 
     public function __construct(
         private readonly Security $security
@@ -24,27 +28,33 @@ class SortieVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return \in_array($attribute, [self::MODIFIER, self::PUBLIER, self::ANNULER], true)
+        return \in_array($attribute, [self::EDIT, self::PUBLISH, self::CANCEL], true)
             && $subject instanceof Sortie;
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(
+        string         $attribute,
+        mixed          $subject,
+        TokenInterface $token,
+        ?Vote          $vote = null
+    ): bool
     {
         $user = $token->getUser();
         if (!$user instanceof Participant) {
             return false;
         }
 
+        /** @var Sortie $sortie */
         $sortie = $subject;
 
-        if (self::ANNULER === $attribute && $this->security->isGranted('ROLE_ADMIN')) {
+        if (self::CANCEL === $attribute && $this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        $estOrganisateur = $sortie->getOrganisateur()?->getId() === $user->getId();
+        $isOrganizer = $sortie->getOrganisateur()?->getId() === $user->getId();
 
         return match ($attribute) {
-            self::MODIFIER, self::PUBLIER, self::ANNULER => $estOrganisateur,
+            self::EDIT, self::PUBLISH, self::CANCEL => $isOrganizer,
             default => false,
         };
     }
