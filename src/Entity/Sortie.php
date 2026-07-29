@@ -20,7 +20,7 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $dateheureDebut = null;
+    private ?\DateTimeImmutable $dateHeureDebut = null;
 
     #[ORM\Column]
     private ?int $duree = null;
@@ -81,14 +81,14 @@ class Sortie
         return $this;
     }
 
-    public function getDateheureDebut(): ?\DateTimeImmutable
+    public function getDateHeureDebut(): ?\DateTimeImmutable
     {
-        return $this->dateheureDebut;
+        return $this->dateHeureDebut;
     }
 
-    public function setDateheureDebut(\DateTimeImmutable $dateheureDebut): static
+    public function setDateHeureDebut(\DateTimeImmutable $dateHeureDebut): static
     {
-        $this->dateheureDebut = $dateheureDebut;
+        $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
     }
