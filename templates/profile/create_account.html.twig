@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+    <h1>Mon profil</h1>
+
+{#    <img src="{{ asset('') }}" alt="Photo de profil">#}
+
+    {{ form_start(form) }}
+
+
+{#    {{ form_row(form.pseudo) }}#}
+{#    {{ form_row(form.prenom) }}#}
+{#    {{ form_row(form.nom) }}#}
+{#    {{ form_row(form.telephone) }}#}
+{#    {{ form_row(form.email) }}#}
+{#    {{ form_row(form.password.first) }}#}
+{#    {{ form_row(form.password.second) }}#}
+
+    {{ form_end(form) }}
+
+    <button type="submit">Enregistrer</button>
+
+
+
+
+
+{% endblock %}
