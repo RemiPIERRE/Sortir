@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 
+
 final class AccueilController extends AbstractController
 {
     #[Route('/accueil', name: 'app_accueil')]
