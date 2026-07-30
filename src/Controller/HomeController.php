@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/accueil', name: 'app_home')]
+    #[Route('/', name: 'app_home')]
     public function index(
         Request $request,
         SortieRepository $sortieRepository,
