@@ -33,6 +33,37 @@
             {% endfor %}
         </select>
 
+        <label for="nom">Le nom de la sortie contient</label>
+        <input type="text" id="nom" name="nom">
+
+        <label for="dateDebut">Entre</label>
+        <input type="date" id="dateDebut" name="dateDebut">
+
+        <label for="dateFin">et</label>
+        <input type="date" id="dateFin" name="dateFin">
+
+        <input type="checkbox" id="organisateur" name="organisateur">
+        <label for="organisateur">
+            Sorties dont je suis l'organisateur/trice
+        </label>
+
+        <input type="checkbox" id="inscrit" name="inscrit">
+        <label for="inscrit">
+            Sorties auxquelles je suis inscrit/e
+        </label>
+
+        <input type="checkbox" id="nonInscrit" name="nonInscrit">
+        <label for="nonInscrit">
+            Sorties auxquelles je ne suis pas inscrit/e
+        </label>
+
+        <input type="checkbox" id="passees" name="passees">
+        <label for="passees">
+            Sorties passées
+        </label>
+
+        <button type="submit">Rechercher</button>
+
 
     </form>
 
