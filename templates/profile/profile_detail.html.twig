@@ -1,28 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Détail du profil{% endblock %}
+
 {% block body %}
 
     <section>
-
-        {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
+        {% if app.user.photo %}
+            <img src="{{ asset('uploads/' ~ app.user.photo) }}" alt="Photo de profil">
+        {% endif %}
 
         <h1>Profil de {{ app.user.pseudo }}</h1>
 
         <div>
             <p>Prénom : {{ app.user.prenom }}</p>
-            <p>Nom : {{ app.user.nom }} </p>
-            <p>Téléphone : {{ app.user.telephone }} </p>
-            <p>Email : {{ app.user.email }} </p>
-            <p>Campus : {{ app.user.campus.nom }} </p>
+            <p>Nom : {{ app.user.nom }}</p>
+            <p>Téléphone : {{ app.user.telephone }}</p>
+            <p>Email : {{ app.user.email }}</p>
+            <p>Campus : {{ app.user.campus.nom }}</p>
         </div>
     </section>
 
     <h2>Modifier votre profil</h2>
 
-    {{ form_start(form) }}
-    <button type="submit">Enregistrer</button>
-    {{ form_end(form) }}
-
+    {{ form(form) }}
 
 {% endblock %}

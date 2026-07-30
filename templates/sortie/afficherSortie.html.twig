@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la sortie{% endblock %}
+
+{% block body %}
+
+    <h1>{{ sortie.nom }}</h1>
+
+    <section>
+        <p>État : {{ sortie.etat ? sortie.etat.libelle : '' }}</p>
+        <p>Organisateur : {{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}</p>
+        <p>Date et heure de début : {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y à H:i') : '' }}</p>
+        <p>Durée : {{ sortie.duree }} minutes</p>
+        <p>Date limite d'inscription
+            : {{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</p>
+        <p>Nombre de places : {{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}</p>
+        <p>Campus : {{ sortie.campus ? sortie.campus.nom : '' }}</p>
+        <p>Lieu : {{ sortie.lieu ? sortie.lieu.nom : '' }}</p>
+        <p>Description : {{ sortie.infoSortie }}</p>
+
+        {% if sortie.etat and sortie.etat.libelle == 'Annulée' and sortie.motifAnnulation %}
+            <p><strong>Motif d'annulation :</strong> {{ sortie.motifAnnulation }}</p>
+        {% endif %}
+    </section>
+
+    <section>
+        <h2>Participants inscrits</h2>
+        {% if sortie.inscrits is empty %}
+            <p>Aucun participant inscrit pour le moment.</p>
+        {% else %}
+            <ul>
+                {% for inscrit in sortie.inscrits %}
+                    <li>{{ inscrit.prenom }} {{ inscrit.nom }} ({{ inscrit.pseudo }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+
+    <p>
+        <a href="{{ path('app_home') }}">Retour à la liste</a>
+    </p>
+
+{% endblock %}
