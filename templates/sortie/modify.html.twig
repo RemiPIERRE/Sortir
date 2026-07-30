@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une sortie{% endblock %}
+
+{% block body %}
+
+    <h1>Modifier « {{ sortie.nom }} »</h1>
+
+    {{ form(form) }}
+
+    <p>
+        <a href="{{ path('app_sortie_list') }}">Retour à la liste</a>
+    </p>
+
+{% endblock %}

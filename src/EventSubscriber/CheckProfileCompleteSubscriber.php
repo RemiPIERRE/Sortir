@@ -1,0 +1,49 @@
+<?php
+
+namespace App\EventSubscriber;
+
+use App\Service\VerifInfoUser;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\RouterInterface;
+
+class CheckProfileCompleteSubscriber implements EventSubscriberInterface
+{
+
+public function __construct(
+    private VerifInfoUser $verifInfoUser,
+    private RouterInterface $router){}
+
+    public function onKernelRequest(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        $route = $event->getRequest()->attributes->get('_route');
+
+        if ($route === null || str_starts_with($route, '_') || in_array($route, ['app_profile_create_account', 'app_login', 'app_logout'], true)) {
+            return;
+        }
+
+
+        $isComplete = $this->verifInfoUser->profileIsComplete();
+
+
+        if (!$isComplete) {
+            $event->setResponse(new RedirectResponse(
+                $this->router->generate('app_profile_create_account')
+            ));
+        }
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => 'onKernelRequest',
+        ];
+    }
+
+}
