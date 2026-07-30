@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties (temporaire){% endblock %}
+
+{% block body %}
+
+    <h1>Liste des sorties</h1>
+
+    <p><em>Page temporaire — sera remplacée par la vraie liste (I1-T4, Lionel).</em></p>
+
+    <p>
+        <a href="{{ path('app_sortie_create') }}">+ Créer une sortie</a>
+    </p>
+
+    {% if sorties is empty %}
+        <p>Aucune sortie pour le moment.</p>
+    {% else %}
+        <table border="1" cellpadding="6" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date de début</th>
+                <th>État</th>
+                <th>Campus</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
+                    <td>{{ sortie.etat ? sortie.etat.libelle : '' }}</td>
+                    <td>{{ sortie.campus ? sortie.campus.nom : '' }}</td>
+                    <td>{{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}</td>
+                    <td>
+                        {% if is_granted(constant('App\\Security\\Voter\\SortieVoter::EDIT'), sortie) %}
+                            <a href="{{ path('app_sortie_modify', {id: sortie.id}) }}">Modifier</a>
+                        {% endif %}
+                        {% if is_granted(constant('App\\Security\\Voter\\SortieVoter::CANCEL'), sortie) %}
+                            <a href="{{ path('app_sortie_cancelled', {id: sortie.id}) }}">Annuler</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}
