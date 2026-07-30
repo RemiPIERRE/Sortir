@@ -2,27 +2,31 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Sortir.com{% endblock %}</title>
+    <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
     {% endblock %}
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
+
 </head>
 <body>
 
-<header>
-    {# TODO : logo Sortir.com #}
-    <nav>
-        <ul>
-            <li><a href="{{ path('app_home') }}">Accueil</a></li>
-            <li><a href="{{ path('app_profile') }}">Mon profil</a></li>
-            <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-        </ul>
-    </nav>
-</header>
+    <header>
+        <!-- Logo Sortir.com -->
+        <nav>
+            <ul>
+                {%if app.user%}
+                <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                <li><a href="{{ path('app_profile', {id: app.user.id}) }}">Mon profil</a></li>
+                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                {% else %}
+                <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
 
 <main>
     {% for label, messages in app.flashes %}
