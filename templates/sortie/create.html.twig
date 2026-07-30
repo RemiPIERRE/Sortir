@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une sortie{% endblock %}
+
+{% block body %}
+
+    <h1>Créer une sortie</h1>
+
+    {{ form(form) }}
+
+    <p>
+        <a href="{{ path('app_sortie_list') }}">Annuler et revenir à la liste</a>
+    </p>
+
+{% endblock %}
