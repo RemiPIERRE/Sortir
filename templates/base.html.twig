@@ -24,9 +24,13 @@
         <!-- Logo Sortir.com -->
         <nav>
             <ul>
+                {%if app.user%}
                 <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                <li><a href="{{ path('app_profile') }}">Mon profil</a></li>
+                <li><a href="{{ path('app_profile', {id: app.user.id}) }}">Mon profil</a></li>
                 <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                {% else %}
+                <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

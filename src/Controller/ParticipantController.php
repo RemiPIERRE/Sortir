@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\CreateAccountType;
 use App\Form\ProfileType;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,27 +42,66 @@ final class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/profile', name: 'app_profile')]
+    #[Route('/profile/{id}', name: 'app_profile')]
     #[IsGranted('ROLE_USER')]
-    public function profile(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function profile(int $id, ParticipantRepository $participantRepository): Response
     {
-        $participant = $this->getUser();
-        $form = $this->createForm(ProfileType::class, $participant);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('password')->getData();
+        $participant = $participantRepository->find($id);
 
-            if (!empty($plainPassword)) {
-                $participant->setPassword($passwordHasher->hashPassword($participant, $plainPassword));
+        if (!$participant) {
+            throw $this->createNotFoundException();
+        }
+
+        $estMonProfil = $this->getUser() === $participant;
+
+        return $this->render('profile/profile_detail.html.twig', [
+            'participant' => $participant,
+            'est_mon_profil' => $estMonProfil,
+        ]);
+
+    }
+
+    #[Route('/profile/{id}/edit', name: 'app_profile_edit')]
+    #[IsGranted('ROLE_USER')]
+    public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository): Response
+    {
+
+        $participant = $participantRepository->find($id);
+
+        if (!$participant) {
+            throw $this->createNotFoundException('Participant introuvable.');
+        }
+
+        // sécurité pour ne pouvoir modifier que son profil
+
+        if ($this->getUser() !== $participant) {
+            throw $this->createAccessDeniedException('Vous ne pouvez modifier que votre propre profil.');
+        }
+
+
+            $form = $this->createForm(ProfileType::class, $participant);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $plainPassword = $form->get('password')->getData();
+
+                if (!empty($plainPassword)) {
+                    $participant->setPassword($passwordHasher->hashPassword($participant, $plainPassword));
+                }
+
+                $em->flush();
+
+                $this->addFlash('success', 'Profil modifié avec succès.');
+
+                return $this->redirectToRoute('app_profile', ['id' => $id]);
             }
 
-            $em->flush();
-
-            $this->addFlash('success', 'Profil modifié avec succès.');
-        }
-        return $this->render('profile/profile_detail.html.twig', [
+        return $this->render('profile/profile_edit.html.twig', [
             'form' => $form,
         ]);
+
     }
+
+
 }

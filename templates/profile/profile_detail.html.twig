@@ -7,22 +7,22 @@
 
         {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
 
-        <h1>Profil de {{ app.user.pseudo }}</h1>
+        <h1>Profil de {{ participant.pseudo }}</h1>
 
         <div>
-            <p>Prénom : {{ app.user.prenom }}</p>
-            <p>Nom : {{ app.user.nom }} </p>
-            <p>Téléphone : {{ app.user.telephone }} </p>
-            <p>Email : {{ app.user.email }} </p>
-            <p>Campus : {{ app.user.campus.nom }} </p>
+            <p>Prénom : {{ participant.prenom }}</p>
+            <p>Nom : {{ participant.nom }} </p>
+            <p>Téléphone : {{ participant.telephone }} </p>
+            <p>Email : {{ participant.email }} </p>
+            <p>Campus : {{ participant.campus.nom }} </p>
         </div>
+
+        {% if est_mon_profil %}
+            <a href="{{ path('app_profile_edit', {id: participant.id}) }}">Modifier</a>
+        {% endif %}
+
     </section>
 
-    <h2>Modifier votre profil</h2>
-
-    {{ form_start(form) }}
-    <button type="submit">Enregistrer</button>
-    {{ form_end(form) }}
 
 
 {% endblock %}
