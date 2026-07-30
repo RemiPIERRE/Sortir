@@ -13,15 +13,16 @@
 </head>
 <body>
 
-<header>
-    <nav>
-        <ul>
-            <li><a href="#">Accueil</a></li>
-            <li><a href="#">Mon profil</a></li>
-            <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-        </ul>
-    </nav>
-</header>
+    <header>
+        <!-- Logo Sortir.com -->
+        <nav>
+            <ul>
+                <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                <li><a href="{{ path('app_profile') }}">Mon profil</a></li>
+                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+            </ul>
+        </nav>
+    </header>
 
 <main>
     {% for label, messages in app.flashes %}
