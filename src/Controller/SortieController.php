@@ -19,13 +19,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
+    #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function afficherSortie(Sortie $sortie): Response
+    {
+        return $this->render('sortie/afficherSortie.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
+
     #[Route('/creer', name: 'create', methods: ['GET', 'POST'])]
     public function creer(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $sortie = new Sortie();
         $sortie->setOrganisateur($this->getUser());
 
@@ -51,12 +58,11 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifier(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::EDIT, $sortie);
 
         if (!$stateManager->canBeEdited($sortie)) {
@@ -82,19 +88,18 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/modify.html.twig', [
-            'form' => $form,
+            'form'   => $form,
             'sortie' => $sortie,
         ]);
     }
-
+  
     #[Route('/{id}/publier', name: 'publish', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function publier(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::PUBLISH, $sortie);
 
         if (!$this->isCsrfTokenValid('publier' . $sortie->getId(), $request->request->get('_token'))) {
@@ -114,14 +119,13 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_list');
     }
 
-    #[Route('/{id}/annuler', name: 'cancelled', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/{id}/annuler', name: 'cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function annuler(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::CANCEL, $sortie);
 
         if (!$stateManager->canBeCancelled($sortie)) {
@@ -137,7 +141,7 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute('app_sortie_list');
             }
 
-            $reason = (string)$request->request->get('motif', '');
+            $reason = (string) $request->request->get('motif', '');
 
             try {
                 $stateManager->cancel($sortie, $reason);
@@ -150,7 +154,7 @@ class SortieController extends AbstractController
             }
         }
 
-        return $this->render('sortie/cancelled.html.twig', [
+        return $this->render('sortie/cancel.html.twig', [
             'sortie' => $sortie,
         ]);
     }
