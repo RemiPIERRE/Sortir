@@ -3,19 +3,26 @@
 {% block title %}Détail du profil{% endblock %}
 {% block body %}
 
-<section>
+    <section>
 
-    {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
+        {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
 
-    <h1>Profil de Jojo56</h1>
+        <h1>Profil de {{ participant.pseudo }}</h1>
 
-    <div>
-        <p>Prénom : ...</p>
-        <p>Nom : ...</p>
-        <p>Téléphone : ...</p>
-        <p>Email : ...</p>
-        <p>Campus : ...</p>
-    </div>
-</section>
+        <div>
+            <p>Prénom : {{ participant.prenom }}</p>
+            <p>Nom : {{ participant.nom }} </p>
+            <p>Téléphone : {{ participant.telephone }} </p>
+            <p>Email : {{ participant.email }} </p>
+            <p>Campus : {{ participant.campus.nom }} </p>
+        </div>
+
+        {% if est_mon_profil %}
+            <a href="{{ path('app_profile_edit', {id: participant.id}) }}">Modifier</a>
+        {% endif %}
+
+    </section>
+
+
 
 {% endblock %}

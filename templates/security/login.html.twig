@@ -2,55 +2,36 @@
 
 {% block title %}Connexion{% endblock %}
 
-{%  block body %}
-    <main class="login-page">
-
-    <section class="login-presentation">
-        <img src="#" alt="Sortir.com">
-        <h2>Sortir.com</h2>
-        <p>Organisez et partagez vos sorties entre stagiaires</p>
-    </section>
-
-    <section class="login-container">
-
-  <form method="post" class="login-form">
-
-
+{% block body %}
     <h1>Se connecter</h1>
 
-      {% if error %}
-          <div class="alert alert-danger">
-              {{ error.messageKey|trans(error.messageData, 'security') }}
-          </div>
-      {% endif %}
+    {% if error %}
+        <div class="flash flash-error">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
 
-    <label for="username">Identifiant</label>
-    <input type="text" value="{{ last_username }}" name="_username" id="username"  autocomplete="username" required autofocus>
-    <label for="password">Mot de passe</label>
-    <input type="password" name="_password" id="password" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+    <form method="post">
+        <label for="username">Identifiant</label>
+        <input type="text" value="{{ last_username }}" name="_username" id="username" autocomplete="username" required
+               autofocus>
 
-    <div class="login-actions">
-    <button type="submit">
-        Se connecter
-    </button>
+        <label for="password">Mot de passe</label>
+        <input type="password" name="_password" id="password" autocomplete="current-password" required>
 
-    <div class="remember">
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+               value="{{ csrf_token('authenticate') }}">
 
-        <div>
-        <input type="checkbox" name="_remember_me" id="_remember_me">
-        <label for="_remember_me">Se souvenir de moi</label>
-    </div>
+        <div class="_remember_me">
+            <input type="checkbox" name="_remember_me" id="_remember_me">
+            <label for="_remember_me">Se souvenir de moi</label>
+        </div>
 
+        <button type="submit">Se connecter</button>
+    </form>
 
+    <div>
+        {# TODO (I3-T4) : {{ path('app_mot_de_passe_oublie') }} #}
         <a href="#">Mot de passe oublié ?</a>
     </div>
-
-    </div>
-
-  </form>
-
-    </section>
-
-  </main>
 {% endblock %}

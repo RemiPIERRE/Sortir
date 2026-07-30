@@ -7,14 +7,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class CreateAccountType extends AbstractType
+class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -29,10 +29,10 @@ class CreateAccountType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'first_options' => ['label' => 'Mot de passe'],
+                'required' => false,
+                'first_options' => ['label' => 'Modification du mot de passe'],
                 'second_options' => ['label' => 'Confirmation mot de passe'],
                 'constraints' => [
-                    new NotBlank(message: 'Choisissez un mot de passe.'),
                     new Length(
                         min: 8,
                         max: 4096,
@@ -56,13 +56,16 @@ class CreateAccountType extends AbstractType
                     ),
                 ],
             ])
-            ->add('photo');
+            ->add('photo')
+            ->add('enregistrer', SubmitType::class, [
+                'label' => 'Enregistrer',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Participant::class, // grâce à 'data_class' toutes les infos sont stockées dans Participant et récupérables via getUser()
+            'data_class' => Participant::class,
         ]);
     }
 }
