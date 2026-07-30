@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 
-final class AccueilController extends AbstractController
+final class HomeController extends AbstractController
 {
-    #[Route('/accueil', name: 'app_accueil')]
+    #[Route('/accueil', name: 'app_home')]
     public function index(
         Request $request,
         SortieRepository $sortieRepository,
@@ -74,7 +74,7 @@ final class AccueilController extends AbstractController
         }
 
 
-        return $this->render('accueil/index.html.twig', [
+        return $this->render('home/index.html.twig', [
             'sorties' => $sorties,
             'campusList' => $campusList,
         ]);
