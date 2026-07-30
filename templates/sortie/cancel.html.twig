@@ -14,7 +14,7 @@
 
     <p><strong>Cette action est irréversible.</strong> Indiquez le motif de l'annulation :</p>
 
-    <form method="post" action="{{ path('app_sortie_cancelled', {id: sortie.id}) }}">
+    <form method="post" action="{{ path('app_sortie_cancel', {id: sortie.id}) }}">
 
         <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ sortie.id) }}">
 
@@ -23,7 +23,7 @@
 
         <div>
             <button type="submit">Confirmer l'annulation</button>
-            <a href="{{ path('app_sortie_list') }}">Renoncer</a>
+            <a href="{{ path('app_home') }}">Renoncer</a>
         </div>
     </form>
 

@@ -34,7 +34,7 @@ final class ParticipantController extends AbstractController
 
             $this->addFlash('success', 'Profil complété avec succès.');
 
-            return $this->redirectToRoute('app_home'); // ou une autre route d'accueil, PAS app_login
+            return $this->redirectToRoute('app_home'); // ou une autre route d'home, PAS app_login
         }
 
         return $this->render('profile/create_account.html.twig', [

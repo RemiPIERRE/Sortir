@@ -19,13 +19,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
+    #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function afficherSortie(Sortie $sortie): Response
+    {
+        return $this->render('sortie/afficherSortie.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
+
     #[Route('/creer', name: 'create', methods: ['GET', 'POST'])]
     public function creer(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $sortie = new Sortie();
         $sortie->setOrganisateur($this->getUser());
 
@@ -41,7 +48,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', $publish ? 'Sortie créée et publiée.' : 'Sortie enregistrée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('sortie/create.html.twig', [
@@ -51,18 +58,17 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifier(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::EDIT, $sortie);
 
         if (!$stateManager->canBeEdited($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être modifiée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         $form = $this->createForm(SortieType::class, $sortie);
@@ -78,29 +84,28 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', $publish ? 'Sortie modifiée et publiée.' : 'Modifications enregistrées.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('sortie/modify.html.twig', [
-            'form' => $form,
+            'form'   => $form,
             'sortie' => $sortie,
         ]);
     }
-
+  
     #[Route('/{id}/publier', name: 'publish', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function publier(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::PUBLISH, $sortie);
 
         if (!$this->isCsrfTokenValid('publier' . $sortie->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Jeton de sécurité invalide.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         try {
@@ -111,46 +116,45 @@ class SortieController extends AbstractController
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_sortie_list');
+        return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/{id}/annuler', name: 'cancelled', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/{id}/annuler', name: 'cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function annuler(
-        Sortie                 $sortie,
-        Request                $request,
+        Sortie $sortie,
+        Request $request,
         EntityManagerInterface $em,
-        EtatSortieManager      $stateManager
-    ): Response
-    {
+        EtatSortieManager $stateManager
+    ): Response {
         $this->denyAccessUnlessGranted(SortieVoter::CANCEL, $sortie);
 
         if (!$stateManager->canBeCancelled($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être annulée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('annuler' . $sortie->getId(), $request->request->get('_token'))) {
                 $this->addFlash('error', 'Jeton de sécurité invalide.');
 
-                return $this->redirectToRoute('app_sortie_list');
+                return $this->redirectToRoute('app_home');
             }
 
-            $reason = (string)$request->request->get('motif', '');
+            $reason = (string) $request->request->get('motif', '');
 
             try {
                 $stateManager->cancel($sortie, $reason);
                 $em->flush();
                 $this->addFlash('success', 'Sortie annulée.');
 
-                return $this->redirectToRoute('app_sortie_list');
+                return $this->redirectToRoute('app_home');
             } catch (\LogicException $e) {
                 $this->addFlash('error', $e->getMessage());
             }
         }
 
-        return $this->render('sortie/cancelled.html.twig', [
+        return $this->render('sortie/cancel.html.twig', [
             'sortie' => $sortie,
         ]);
     }
