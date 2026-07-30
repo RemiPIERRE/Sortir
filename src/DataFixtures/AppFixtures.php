@@ -155,6 +155,9 @@ class AppFixtures extends Fixture
             ['joseph', 'joseph.olivier@eni.fr', 'Jojo56', 'Olivier', 'Joseph', '0644444444', false, true, 'roche'],
             ['marie', 'marie.curie@eni.fr', 'MarieC', 'Curie', 'Marie', '0655555555', false, true, 'chartres'],
             ['raymond', 'raymond.daubigny@eni.fr', 'Raymond.D', 'Daubigny', 'Raymond', '0666666666', false, false, 'herblain'],
+            ['', 'timothee.chalamet@eni.fr', '', '', '', '', false, true, 'chartres'],
+            ['', 'keanu.reeves@eni.fr', '', '', '', '', false, true, 'herblain']
+
         ];
 
         $participants = [];
