@@ -48,7 +48,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', $publish ? 'Sortie créée et publiée.' : 'Sortie enregistrée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('sortie/create.html.twig', [
@@ -68,7 +68,7 @@ class SortieController extends AbstractController
         if (!$stateManager->canBeEdited($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être modifiée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         $form = $this->createForm(SortieType::class, $sortie);
@@ -84,7 +84,7 @@ class SortieController extends AbstractController
 
             $this->addFlash('success', $publish ? 'Sortie modifiée et publiée.' : 'Modifications enregistrées.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('sortie/modify.html.twig', [
@@ -105,7 +105,7 @@ class SortieController extends AbstractController
         if (!$this->isCsrfTokenValid('publier' . $sortie->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Jeton de sécurité invalide.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         try {
@@ -116,7 +116,7 @@ class SortieController extends AbstractController
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_sortie_list');
+        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/{id}/annuler', name: 'cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
@@ -131,14 +131,14 @@ class SortieController extends AbstractController
         if (!$stateManager->canBeCancelled($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être annulée.');
 
-            return $this->redirectToRoute('app_sortie_list');
+            return $this->redirectToRoute('app_home');
         }
 
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('annuler' . $sortie->getId(), $request->request->get('_token'))) {
                 $this->addFlash('error', 'Jeton de sécurité invalide.');
 
-                return $this->redirectToRoute('app_sortie_list');
+                return $this->redirectToRoute('app_home');
             }
 
             $reason = (string) $request->request->get('motif', '');
@@ -148,7 +148,7 @@ class SortieController extends AbstractController
                 $em->flush();
                 $this->addFlash('success', 'Sortie annulée.');
 
-                return $this->redirectToRoute('app_sortie_list');
+                return $this->redirectToRoute('app_home');
             } catch (\LogicException $e) {
                 $this->addFlash('error', $e->getMessage());
             }
