@@ -6,10 +6,6 @@
 
     <h1>Accueil</h1>
 
-    {% if app.user.administrateur %}
-        <a href="#">Administration</a>
-    {% endif %}
-
     <section class="infos-accueil">
         <p>Date du jour : {{ "now"|date("d/m/Y") }}</p>
 
@@ -78,7 +74,7 @@
                     {% if app.user in sortie.inscrits %}Oui{% else %}Non{% endif %}
                 </td>
                 <td>
-                    <a href="#">{{ sortie.organisateur.pseudo }}</a>
+                    <a href="{{ path('app_profile', {id: sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
                 </td>
                 <td>
                     <a href="{{ path('app_sortie_show', {id: sortie.id}) }}">Afficher</a>

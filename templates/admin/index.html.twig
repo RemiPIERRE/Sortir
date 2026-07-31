@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+
+    <h1>Espace d'administration</h1>
+
+    <p>Bienvenue {{ app.user.prenom }}. Gérez ici les données de la plateforme.</p>
+
+    <section class="admin-tiles">
+        <ul>
+            <li>
+                {# TODO : remplacer par la vraie route quand la page sera créée #}
+                {# <a href="{{ path('app_admin_users') }}">Gestion des utilisateurs</a> #}
+                <a href="#">Gestion des utilisateurs</a>
+                <p>Lister, modifier, désactiver, inscrire ou importer des utilisateurs.</p>
+            </li>
+            <li>
+                {# <a href="{{ path('app_admin_villes') }}">Gestion des villes</a> #}
+                <a href="#">Gestion des villes</a>
+                <p>Ajouter, modifier ou supprimer les villes.</p>
+            </li>
+            <li>
+                {# <a href="{{ path('app_admin_campus') }}">Gestion des campus</a> #}
+                <a href="#">Gestion des campus</a>
+                <p>Ajouter, modifier ou supprimer les campus.</p>
+            </li>
+        </ul>
+    </section>
+
+    <p>
+        <a href="{{ path('app_home') }}">Retour à l'accueil</a>
+    </p>
+
+{% endblock %}
