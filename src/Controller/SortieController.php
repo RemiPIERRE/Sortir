@@ -20,19 +20,27 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SortieController extends AbstractController
 {
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function afficherSortie(Sortie $sortie): Response
+    public function afficherSortie(Sortie $sortie, EtatSortieManager $stateManager): Response
     {
+
+        $user = $this->getUser();
+        $dejaInscrit = $sortie->getInscrits()->contains($user);
+
         return $this->render('sortie/afficherSortie.html.twig', [
             'sortie' => $sortie,
+            'peut_inscrire' => $stateManager->canRegister($sortie) && !$dejaInscrit,
+            'peut_desister' => $stateManager->canWithdraw($sortie) && $dejaInscrit,
+            'deja_inscrit' => $dejaInscrit,
         ]);
     }
 
     #[Route('/creer', name: 'create', methods: ['GET', 'POST'])]
     public function creer(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em,
-        EtatSortieManager $stateManager
-    ): Response {
+        EtatSortieManager      $stateManager
+    ): Response
+    {
         $sortie = new Sortie();
         $sortie->setOrganisateur($this->getUser());
 
@@ -58,11 +66,12 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifier(
-        Sortie $sortie,
-        Request $request,
+        Sortie                 $sortie,
+        Request                $request,
         EntityManagerInterface $em,
-        EtatSortieManager $stateManager
-    ): Response {
+        EtatSortieManager      $stateManager
+    ): Response
+    {
         $this->denyAccessUnlessGranted(SortieVoter::EDIT, $sortie);
 
         if (!$stateManager->canBeEdited($sortie)) {
@@ -88,18 +97,19 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/modify.html.twig', [
-            'form'   => $form,
+            'form' => $form,
             'sortie' => $sortie,
         ]);
     }
-  
+
     #[Route('/{id}/publier', name: 'publish', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function publier(
-        Sortie $sortie,
-        Request $request,
+        Sortie                 $sortie,
+        Request                $request,
         EntityManagerInterface $em,
-        EtatSortieManager $stateManager
-    ): Response {
+        EtatSortieManager      $stateManager
+    ): Response
+    {
         $this->denyAccessUnlessGranted(SortieVoter::PUBLISH, $sortie);
 
         if (!$this->isCsrfTokenValid('publier' . $sortie->getId(), $request->request->get('_token'))) {
@@ -121,11 +131,12 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/annuler', name: 'cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function annuler(
-        Sortie $sortie,
-        Request $request,
+        Sortie                 $sortie,
+        Request                $request,
         EntityManagerInterface $em,
-        EtatSortieManager $stateManager
-    ): Response {
+        EtatSortieManager      $stateManager
+    ): Response
+    {
         $this->denyAccessUnlessGranted(SortieVoter::CANCEL, $sortie);
 
         if (!$stateManager->canBeCancelled($sortie)) {
@@ -141,7 +152,7 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute('app_home');
             }
 
-            $reason = (string) $request->request->get('motif', '');
+            $reason = (string)$request->request->get('motif', '');
 
             try {
                 $stateManager->cancel($sortie, $reason);
@@ -157,5 +168,71 @@ class SortieController extends AbstractController
         return $this->render('sortie/cancel.html.twig', [
             'sortie' => $sortie,
         ]);
+    }
+
+    #[Route('/{id}/inscription', name: 'register', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function inscription(
+        Sortie                 $sortie,
+        Request                $request,
+        EntityManagerInterface $em,
+        EtatSortieManager      $stateManager
+    ): Response
+    {
+
+        if (!$this->isCsrfTokenValid('inscription' . $sortie->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        if (!$stateManager->canRegister($sortie)) {
+            $this->addFlash('error', 'Vous ne pouvez plus vous inscrire à cette sortie .');
+            return $this->redirectToRoute('app_home');
+        }
+
+        /** @var \App\Entity\Participant $user */
+        $user = $this->getUser();
+
+        if ($sortie->getInscrits()->contains($user)) {
+            $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        $sortie->addInscrit($user);
+        $em->flush();
+
+        $this->addFlash('success', 'Votre inscription a été prise en compte.');
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/{id}/desister', name: 'withdraw', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function desister(
+        Sortie                 $sortie,
+        Request                $request,
+        EntityManagerInterface $em,
+        EtatSortieManager      $stateManager
+    ): Response
+    {
+        if (!$this->isCsrfTokenValid('desister' . $sortie->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        if (!$stateManager->canWithdraw($sortie)) {
+            $this->addFlash('error', 'Impossible de se désister de cette sortie.');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        /** @var \App\Entity\Participant $user */
+        $user = $this->getUser();
+
+        $sortie->removeInscrit($user);
+        $em->flush();
+
+        $this->addFlash('success', 'Désistement confirmé.');
+
+        return $this->redirectToRoute('app_home');
+
     }
 }

@@ -10,6 +10,11 @@
         <h1>Profil de {{ participant.pseudo }}</h1>
 
         <div>
+
+            {% if participant.photo %}
+                <img src="{{ asset('images/photos/' ~ participant.photo) }}" alt="Photo de profil de {{ participant.pseudo }}" width="150">
+            {% endif %}
+
             <p>Prénom : {{ participant.prenom }}</p>
             <p>Nom : {{ participant.nom }} </p>
             <p>Téléphone : {{ participant.telephone }} </p>
@@ -22,7 +27,5 @@
         {% endif %}
 
     </section>
-
-
 
 {% endblock %}
