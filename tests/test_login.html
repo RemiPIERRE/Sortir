@@ -1,48 +1,95 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Test connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connexion</title>
 
     <link rel="stylesheet" href="../assets/styles/login.css">
+    <link rel="stylesheet" href="../assets/styles/app.css">
 </head>
+
 <body>
 
 <main class="login-page">
+
     <section class="login-presentation">
-        <h2>Sortir.com</h2>
-        <p>Organisez et partagez vos sorties entre stagiaires.</p>
+
+        <img src="#" alt="Logo Sortir.com">
+
+        <h2>
+            <span class="sortir">Sortir</span><span class="com">.com</span>
+        </h2>
+
+        <p>
+            Organisez et partagez vos sorties entre stagiaires
+        </p>
+
     </section>
 
     <section class="login-container">
-        <form class="login-form" action="#" onsubmit="return false;">
-            <h1>Se connecter</h1>
+
+        <h1>Se connecter</h1>
+
+
+<!--
+        <div class="flash-error">
+            Identifiant ou mot de passe incorrect.
+        </div>
+        -->
+
+
+        <form method="post" class="login-form">
 
             <label for="username">Identifiant</label>
-            <input type="text" id="username">
+
+            <input
+                type="text"
+                name="_username"
+                id="username"
+                autocomplete="username"
+                required
+                autofocus
+            >
 
             <label for="password">Mot de passe</label>
-            <input type="password" id="password">
 
-            <div class="circle circle1"></div>
-            <div class="circle circle2"></div>
-            <div class="circle circle3"></div>
-            <div
+            <input
+                type="password"
+                name="_password"
+                id="password"
+                autocomplete="current-password"
+                required
+            >
 
-            <div class="login-actions">
-                <button type="submit">Se connecter</button>
+            <div class="_remember_me">
 
-                <div class="remember">
-                    <div>
-                        <input type="checkbox" id="_remember_me">
-                        <label for="_remember_me">Se souvenir de moi</label>
-                    </div>
+                <input
+                    type="checkbox"
+                    name="_remember_me"
+                    id="_remember_me"
+                >
 
-                    <a href="#">Mot de passe oublié ?</a>
-                </div>
+                <label for="_remember_me">
+                    Se souvenir de moi
+                </label>
+
             </div>
+
+            <button type="submit">
+                Se connecter
+            </button>
+
         </form>
+
+        <a href="#" class="forgot-password">
+            Mot de passe oublié ?
+        </a>
+
     </section>
+
 </main>
 
 </body>

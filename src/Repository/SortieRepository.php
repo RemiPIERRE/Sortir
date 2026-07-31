@@ -31,7 +31,11 @@ class SortieRepository extends ServiceEntityRepository
 
     $queryBuilder
         ->where('s.campus = :campus')
-        ->setParameter('campus', $campus);
+        ->setParameter('campus', $campus)
+        ->join('s.etat', 'e')
+        ->andWhere('e.libelle != :etatCreation')
+        ->setParameter('etatCreation', 'En création');
+
 
     if ($nomSortie){
         $queryBuilder

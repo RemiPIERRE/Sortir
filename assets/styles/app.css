@@ -1,7 +1,58 @@
-@import "login.css";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: skyblue;
+*{
+    box-sizing:border-box;
 }
 
+body{
+    margin:0;
+    font-family:"Poppins",sans-serif;
+    color:#17324d;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(to right,#2d7dd2,#27ae60);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+input,
+select{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    text-align:left;
+}
+
+th{
+    background:#17324d;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f5f5f5;
+}
+
+a{
+    color:#2d7dd2;
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
