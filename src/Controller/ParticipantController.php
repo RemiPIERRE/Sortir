@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ParticipantController extends AbstractController
 {
@@ -64,7 +65,7 @@ final class ParticipantController extends AbstractController
 
     #[Route('/profile/{id}/edit', name: 'app_profile_edit')]
     #[IsGranted('ROLE_USER')]
-    public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository): Response
+    public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository, SluggerInterface $slugger): Response
     {
 
         $participant = $participantRepository->find($id);
@@ -79,7 +80,6 @@ final class ParticipantController extends AbstractController
             throw $this->createAccessDeniedException('Vous ne pouvez modifier que votre propre profil.');
         }
 
-
             $form = $this->createForm(ProfileType::class, $participant);
             $form->handleRequest($request);
 
@@ -88,6 +88,35 @@ final class ParticipantController extends AbstractController
 
                 if (!empty($plainPassword)) {
                     $participant->setPassword($passwordHasher->hashPassword($participant, $plainPassword));
+                }
+
+
+                // gestion de la suppression
+
+                if ($form->has('deletePhoto') && $form->get('deletePhoto')->getData()) {
+                    $ancienCheminPhoto = $this->getParameter('photos_directory') . '/' . $participant->getPhoto();
+
+                    if (file_exists($ancienCheminPhoto)) {
+                        unlink($ancienCheminPhoto);
+                    }
+
+                    $participant->setPhoto(null);
+                }
+
+
+                $photoFile = $form->get('photoFile')->getData();
+
+                if($photoFile) {
+                    $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
+
+                    $photoFile->move(
+                        $this->getParameter('photos_directory'),
+                        $newFilename
+                    );
+
+                    $participant->setPhoto($newFilename);
                 }
 
                 $em->flush();
