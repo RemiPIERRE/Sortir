@@ -31,7 +31,11 @@ class SortieRepository extends ServiceEntityRepository
 
     $queryBuilder
         ->where('s.campus = :campus')
-        ->setParameter('campus', $campus);
+        ->setParameter('campus', $campus)
+        ->join('s.etat', 'e')
+        ->andWhere('e.libelle != :etatCreation')
+        ->setParameter('etatCreation', 'En création');
+
 
     if ($nomSortie){
         $queryBuilder
@@ -46,9 +50,12 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     if ($dateFin) {
+        $dateFinIncluse = new \DateTimeImmutable($dateFin);
+        $dateFinExclue = $dateFinIncluse->modify('+1 day');
+
         $queryBuilder
-            ->andWhere('s.dateHeureDebut <= :dateFin')
-            ->setParameter('dateFin', $dateFin);
+            ->andWhere('s.dateHeureDebut < :dateFin')
+            ->setParameter('dateFin', $dateFinExclue);
     }
 
     if ($organisateur) {
@@ -57,17 +64,18 @@ class SortieRepository extends ServiceEntityRepository
             ->setParameter('participant', $participant);
     }
 
-    if ($inscrit) {
+    if ($inscrit && !$nonInscrit) {
         $queryBuilder
             ->andWhere(':participant MEMBER OF s.inscrits')
             ->setParameter('participant', $participant);
     }
 
-    if ($nonInscrit) {
+    if ($nonInscrit && !$inscrit) {
         $queryBuilder
             ->andWhere(':participant NOT MEMBER OF s.inscrits')
             ->setParameter('participant', $participant);
     }
+
 
     if ($passees) {
         $queryBuilder

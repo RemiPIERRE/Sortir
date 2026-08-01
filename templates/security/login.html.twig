@@ -3,6 +3,22 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+
+<main class="login-page">
+
+
+
+    <section class="login-presentation">
+        <img src="#" alt="Sortir.com">
+        <h2>
+            <span class="sortir">Sortir</span><span class="com">.com</span>
+        </h2>
+
+        <p>Organisez et partagez vos sorties entre stagiaires</p>
+    </section>
+
+    <section class="login-container">
+
     <h1>Se connecter</h1>
 
     {% if error %}
@@ -11,7 +27,7 @@
         </div>
     {% endif %}
 
-    <form method="post">
+    <form method="post" class="login-form">
         <label for="username">Identifiant</label>
         <input type="text" value="{{ last_username }}" name="_username" id="username" autocomplete="username" required
                autofocus>
@@ -32,6 +48,10 @@
 
     <div>
         {# TODO (I3-T4) : {{ path('app_mot_de_passe_oublie') }} #}
-        <a href="#">Mot de passe oublié ?</a>
+        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
     </div>
+
+    </section>
+
+</main>
 {% endblock %}
