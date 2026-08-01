@@ -1,0 +1,146 @@
+
+@import "app.css";
+
+.login-page {
+    min-height: 100vh;
+    padding: 30px;
+
+    background:
+        radial-gradient(circle at 10% 15%, rgba(52, 152, 219, 0.50), transparent 25%),
+        radial-gradient(circle at 88% 12%, rgba(241, 196, 15, 0.50), transparent 25%),
+        radial-gradient(circle at 88% 78%, rgba(46, 204, 113, 0.50), transparent 25%),
+        radial-gradient(circle at 12% 88%, rgba(230, 126, 34, 0.50), transparent 25%),
+        linear-gradient(140deg, #10324f, #1d6572, #2e7564);
+}
+
+.login-presentation{
+    color:white;
+    margin-bottom:50px;
+}
+
+.login-presentation img{
+    width:80px;
+    margin-bottom:10px;
+}
+
+.login-presentation h2{
+    font-size:46px;
+    font-weight:bold;
+    margin:0;
+}
+
+
+
+
+.login-presentation p{
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    color:#F5F2E8;
+    line-height: 1.6;
+}
+
+.login-container{
+
+    width:500px;
+
+    margin:0 auto;
+
+    padding:30px;
+
+    background:white;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+
+.login-container h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+
+    font-family: Georgia, serif;
+    font-size: 40px;
+    color: #17324d;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    margin-bottom: 16px;
+    padding: 12px;
+
+    background: #edf7f4;
+    border: 2px solid #cce2dc;
+    border-radius: 10px;
+
+    font-size: 15px;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    outline: none;
+    border-color: #2d7dd2;
+}
+
+._remember_me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+._remember_me input {
+    margin-right: 10px;
+}
+
+._remember_me label {
+    margin: 0;
+    font-weight: normal;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 20px;
+
+    text-align: right;
+    text-decoration: none;
+    color: #2d7dd2;
+    font-weight: bold;
+}
+
+.forgot-password:hover {
+    color: #27ae60;
+}
+
+.flash-error {
+    margin-bottom: 20px;
+    padding: 12px;
+
+    background: #fff7d6;
+    border: 1px solid #f1c40f;
+    border-radius: 8px;
+    color: #7a6200;
+}
+
+@media screen and (max-width: 520px) {
+    .login-page {
+        padding: 20px;
+    }
+
+    .login-container {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .login-presentation h2 {
+        font-size: 29px;
+    }
+}

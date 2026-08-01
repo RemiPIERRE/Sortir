@@ -25,13 +25,17 @@ class SortieRepository extends ServiceEntityRepository
         bool        $nonInscrit,
         bool        $passees,
         Participant $participant
-    ): array
-    {
+    ): array {
         $queryBuilder = $this->createQueryBuilder('s');
+
+        $queryBuilder
+            ->join('s.etat', 'e')
+            ->andWhere('e.libelle != :etatCreation')
+            ->setParameter('etatCreation', 'En création');
 
         if ($campus) {
             $queryBuilder
-                ->where('s.campus = :campus')
+                ->andWhere('s.campus = :campus')
                 ->setParameter('campus', $campus);
         }
 
@@ -44,13 +48,14 @@ class SortieRepository extends ServiceEntityRepository
         if ($dateDebut) {
             $queryBuilder
                 ->andWhere('s.dateHeureDebut >= :dateDebut')
-                ->setParameter('dateDebut', $dateDebut);
+                ->setParameter('dateDebut', new \DateTimeImmutable($dateDebut));
         }
 
         if ($dateFin) {
+            $dateFinExclue = (new \DateTimeImmutable($dateFin))->modify('+1 day');
             $queryBuilder
-                ->andWhere('s.dateHeureDebut <= :dateFin')
-                ->setParameter('dateFin', $dateFin);
+                ->andWhere('s.dateHeureDebut < :dateFin')
+                ->setParameter('dateFin', $dateFinExclue);
         }
 
         if ($organisateur) {
@@ -59,13 +64,13 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('participant', $participant);
         }
 
-        if ($inscrit) {
+        if ($inscrit && !$nonInscrit) {
             $queryBuilder
                 ->andWhere(':participant MEMBER OF s.inscrits')
                 ->setParameter('participant', $participant);
         }
 
-        if ($nonInscrit) {
+        if ($nonInscrit && !$inscrit) {
             $queryBuilder
                 ->andWhere(':participant NOT MEMBER OF s.inscrits')
                 ->setParameter('participant', $participant);
@@ -76,7 +81,6 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('s.dateHeureDebut < :maintenant')
                 ->setParameter('maintenant', new \DateTimeImmutable());
         }
-
 
         return $queryBuilder
             ->getQuery()
