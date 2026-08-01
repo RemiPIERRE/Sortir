@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Modifier mon profil
+{% endblock %}
+
+{% block body %}
+
+    <h1>Modifier votre profil</h1>
+
+    {{ form_start(form) }}
+
+    {% if app.user.photo %}
+
+        <img src="{{ asset('images/photos/' ~ app.user.photo) }}"
+             alt="Photo de profil de {{ app.user.pseudo }}"
+             width="150">
+
+    {% endif %}
+
+    {% if form.deletePhoto is defined %}
+        {{ form_row(form.deletePhoto) }}
+    {% endif %}
+
+    {{ form_row(form.pseudo) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.telephone) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.photoFile) }}
+
+    {{ form_row(form.password.first) }}
+    {{ form_row(form.password.second) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+

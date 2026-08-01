@@ -4,15 +4,20 @@ namespace App\Form;
 
 use App\Entity\Participant;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ProfileType extends AbstractType
 {
@@ -26,6 +31,20 @@ class ProfileType extends AbstractType
                 'required' => false,
             ])
             ->add('email', EmailType::class)
+            ->add('photoFile', FileType::class, [
+                'label' => 'Photo de profil',
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new Assert\Image(
+                        maxSize: '2M',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                        maxSizeMessage: 'Image trop lourde (2 Mo maximum).',
+                        mimeTypesMessage: 'Formats acceptés : JPEG, PNG, WebP.',
+                    ),
+                ],
+
+            ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
@@ -56,10 +75,22 @@ class ProfileType extends AbstractType
                     ),
                 ],
             ])
-            ->add('photo')
             ->add('enregistrer', SubmitType::class, [
                 'label' => 'Enregistrer',
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $participant = $event->getData();
+
+            if ($participant && $participant->getPhoto()) {
+                $form = $event->getForm();
+                $form->add('deletePhoto', CheckBoxType::class, [
+                    'label' => 'Supprimer la photo actuelle',
+                    'required' => false,
+                    'mapped' => false,
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
