@@ -1,3 +1,6 @@
+@import 'cardSortie.css';
+@import 'home.css';
+
 body {
     background-color: skyblue;
 }

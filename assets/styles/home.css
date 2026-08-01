@@ -1,0 +1,170 @@
+:root {
+    --bleu-fonce: #1b2a4a;
+    --bleu: #2b4a7a;
+    --orange: #f26b3a;
+    --gris-fond: #f4f2ee;
+    --gris-bord: #e2e0da;
+    --gris-texte: #5a5a5a;
+    --blanc: #ffffff;
+}
+
+body {
+    background: var(--gris-fond);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--bleu-fonce);
+    margin: 0;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.accueil-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.campus-label {
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.3rem;
+}
+
+.accueil-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--bleu-fonce);
+}
+
+.accueil-sous-titre {
+    margin: 0.4rem 0 0;
+    color: var(--gris-texte);
+}
+
+.btn-creer {
+    background: var(--orange);
+    color: var(--blanc);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(242, 107, 58, 0.4);
+    transition: background 0.15s ease;
+}
+
+.btn-creer:hover {
+    background: #e05a2a;
+}
+
+.barre-filtres {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.filtre-champ {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.filtre-champ label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gris-texte);
+}
+
+.filtre-champ input,
+.filtre-champ select {
+    border: 1px solid var(--gris-bord);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.9rem;
+    background: var(--gris-fond);
+    color: var(--bleu-fonce);
+}
+
+.filtre-champ input:focus,
+.filtre-champ select:focus {
+    outline: 2px solid var(--bleu);
+    outline-offset: 1px;
+    background: var(--blanc);
+}
+
+.filtre-recherche {
+    flex: 1 1 220px;
+}
+
+.filtre-recherche input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-filtrer {
+    background: var(--bleu-fonce);
+    color: var(--blanc);
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-filtrer:hover {
+    background: var(--bleu);
+}
+
+.filtres-rapides {
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+}
+
+.pilule {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--gris-fond);
+    border: 1px solid var(--gris-bord);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--bleu-fonce);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pilule:hover {
+    border-color: var(--bleu);
+}
+
+.pilule:has(input:checked) {
+    background: var(--bleu-fonce);
+    color: var(--blanc);
+    border-color: var(--bleu-fonce);
+}
+
+.pilule input {
+    accent-color: var(--orange);
+}

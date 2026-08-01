@@ -1,0 +1,43 @@
+<article class="card-sortie">
+
+    <header>
+        <h3>{{ sortie.nom }}</h3>
+
+        {% if sortie.etat %}
+            {% set etatSlug = sortie.etat.libelle|lower|replace({' ': '-', 'é': 'e', 'è': 'e', 'û': 'u'}) %}
+            <span class="badge badge-{{ etatSlug }}">{{ sortie.etat.libelle }}</span>
+        {% endif %}
+    </header>
+
+    <p class="card-date">
+        {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y à H:i') : '' }}
+    </p>
+
+    <p class="card-lieu">
+        {{ sortie.lieu ? sortie.lieu.nom : '' }}
+        {% if sortie.campus %}, {{ sortie.campus.nom }}{% endif %}
+    </p>
+
+    <footer>
+        <span class="card-orga">
+            <a href="{{ path('app_profile', { id: sortie.organisateur.id }) }}">
+                {{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}
+            </a>
+        </span>
+
+        <span class="card-places">
+            {{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}
+        </span>
+    </footer>
+
+    <div class="card-actions">
+        {% if sortie.organisateur and app.user and sortie.organisateur.id == app.user.id %}
+            <span class="tag-orga">Vous organisez</span>
+        {% elseif app.user and app.user in sortie.inscrits %}
+            <span class="tag-inscrit">Inscrit·e</span>
+        {% endif %}
+
+        <a href="{{ path('app_sortie_show', { id: sortie.id }) }}">Afficher</a>
+    </div>
+
+</article>
