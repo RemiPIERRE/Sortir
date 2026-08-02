@@ -1,6 +1,8 @@
 
 @import "app.css";
 
+
+/* Page complète de connexion avec le fond coloré */
 .login-page {
     min-height: 100vh;
     padding: 30px;
@@ -13,47 +15,51 @@
         linear-gradient(140deg, #10324f, #1d6572, #2e7564);
 }
 
-.login-presentation{
-    color:white;
-    margin-bottom:50px;
-}
 
-.login-presentation img{
-    width:80px;
-    margin-bottom:10px;
-}
-
-.login-presentation h2{
-    font-size:46px;
-    font-weight:bold;
-    margin:0;
+/* Partie contenant le logo, le nom du site et le texte de présentation */
+.login-presentation {
+    margin-bottom: 50px;
+    color: white;
 }
 
 
+/* Taille du logo */
+.login-presentation img {
+    width: 80px;
+    margin-bottom: 10px;
+}
 
 
-.login-presentation p{
-    font-family: "Poppins", sans-serif;
+/* Nom du site */
+.login-presentation h2 {
+    margin: 0;
+    font-size: 46px;
+    font-weight: bold;
+}
+
+
+/* Texte de présentation sous le nom du site */
+.login-presentation p {
     font-size: 18px;
-    color:#F5F2E8;
+    color: #F5F2E8;
     line-height: 1.6;
 }
 
-.login-container{
 
-    width:500px;
+/* Bloc blanc contenant le formulaire */
+.login-container {
+    width: 500px;
+    margin: 0 auto;
+    padding: 30px;
 
-    margin:0 auto;
+    background: white;
+    border-radius: 20px;
 
-    padding:30px;
-
-    background:white;
-
-    border-radius:20px;
-
-    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .25);
 }
 
+
+/* Titre du formulaire */
 .login-container h1 {
     margin-top: 0;
     margin-bottom: 25px;
@@ -63,16 +69,22 @@
     color: #17324d;
 }
 
+
+/* Place les éléments du formulaire les uns sous les autres */
 .login-form {
     display: flex;
     flex-direction: column;
 }
 
+
+/* Style des labels */
 .login-form label {
     margin-bottom: 6px;
     font-weight: bold;
 }
 
+
+/* Style des champs identifiant et mot de passe */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     margin-bottom: 16px;
@@ -85,12 +97,16 @@
     font-size: 15px;
 }
 
+
+/* Mise en valeur du champ sélectionné */
 .login-form input[type="text"]:focus,
 .login-form input[type="password"]:focus {
     outline: none;
     border-color: #2d7dd2;
 }
 
+
+/* Aligne la case à cocher et son texte */
 ._remember_me {
     display: flex;
     align-items: center;
@@ -106,6 +122,8 @@
     font-weight: normal;
 }
 
+
+/* Lien vers la récupération du mot de passe */
 .forgot-password {
     display: block;
     margin-top: 20px;
@@ -116,10 +134,14 @@
     font-weight: bold;
 }
 
+
+/* Changement de couleur du lien au survol */
 .forgot-password:hover {
     color: #27ae60;
 }
 
+
+/* Message affiché en cas d'erreur de connexion */
 .flash-error {
     margin-bottom: 20px;
     padding: 12px;
@@ -130,16 +152,21 @@
     color: #7a6200;
 }
 
+
+/* Adaptation de la page pour les petits écrans */
 @media screen and (max-width: 520px) {
+
     .login-page {
         padding: 20px;
     }
 
+    /* Le formulaire prend toute la largeur disponible */
     .login-container {
         width: 100%;
         padding: 25px;
     }
 
+    /* Réduction de la taille du nom du site */
     .login-presentation h2 {
         font-size: 29px;
     }

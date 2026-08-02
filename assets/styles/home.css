@@ -1,114 +1,286 @@
 @import "app.css";
 
-body{
-    margin:0;
+
+/* Inclut le padding et les bordures dans la largeur des éléments */
+* {
+    box-sizing: border-box;
+}
+
+
+/* Fond général visible derrière le header et la partie transparente */
+body {
+    margin: 0;
 
     background:
-        radial-gradient(circle at 10% 15%, rgba(52,152,219,.35), transparent 25%),
-        radial-gradient(circle at 88% 12%, rgba(241,196,15,.35), transparent 25%),
-        radial-gradient(circle at 88% 78%, rgba(46,204,113,.35), transparent 25%),
-        radial-gradient(circle at 12% 88%, rgba(230,126,34,.35), transparent 25%),
-        linear-gradient(140deg,#10324f,#1d6572,#2e7564);
+        radial-gradient(circle at 10% 15%, rgba(52, 152, 219, .35), transparent 25%),
+        radial-gradient(circle at 88% 12%, rgba(241, 196, 15, .35), transparent 25%),
+        radial-gradient(circle at 88% 78%, rgba(46, 204, 113, .35), transparent 25%),
+        radial-gradient(circle at 12% 88%, rgba(230, 126, 34, .35), transparent 25%),
+        linear-gradient(140deg, #10324f, #1d6572, #2e7564);
 }
 
-.home-header{
-    width:100%;
-    min-height:120px;
-    padding:25px 40px;
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+/* En-tête placé directement sur le fond coloré */
+.home-header {
+    min-height: 120px;
+    padding: 25px 40px;
 
-    color:white;
-    background:transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: white;
+    background: transparent;
 }
 
-.home-page{
-    min-height:calc(100vh - 120px);
-    width:100%;
 
-    background:rgba(255,255,255,.88);
+/* Couleur du titre Accueil */
+.home-header h1 {
+    color: #F4A261;
 }
 
-.home-container{
-    max-width:1400px;
-    margin:auto;
-    padding:30px 40px;
-}
-.header{
-    height:80px;
-    padding:0 30px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+/* Partie principale blanche et légèrement transparente */
+.home-page {
+    min-height: calc(100vh - 120px);
+    width: 100%;
 
-    background:transparent;
+    background: rgba(255, 255, 255, .88);
 }
 
-.infos-accueil{
-    text-align:right;
+
+/* Limite la largeur du contenu et le centre */
+.home-container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 30px 40px;
 }
 
-.filters-container{
-    margin-bottom:30px;
+
+/* Informations sur la date et le participant */
+.infos-accueil {
+    text-align: right;
 }
 
-.filters-fields{
-    display:flex;
-    gap:20px;
-    margin-bottom:20px;
+
+/* Bloc contenant tous les filtres */
+.filters-container {
+    margin-bottom: 30px;
 }
 
-.form-group{
-    flex:1;
+.filters-container h2 {
+    margin-bottom: 20px;
 }
 
-.dates-group{
-    display:flex;
-    gap:20px;
-    flex:2;
+
+/* Organisation des trois parties :
+   champs, cases à cocher et bouton Rechercher */
+.filters-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 35px;
 }
 
-.filters-checkboxes{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:20px;
+
+/* Les champs et les cases occupent chacun une partie de l'espace */
+.filters-fields,
+.filters-checkboxes {
+    flex: 1;
 }
 
-.filters-action{
-    text-align:right;
+
+/* Aligne le label et son champ sur une même ligne */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
 }
 
-.sorties-container{
-    margin-top:30px;
+
+/* Largeur identique pour les labels */
+.form-group label {
+    width: 210px;
+    font-weight: 500;
 }
 
-.table-wrapper{
-    overflow-x:auto;
+
+/* Les champs utilisent l'espace restant */
+.form-group input,
+.form-group select {
+    flex: 1;
+    min-width: 0;
 }
 
-.create-link{
-    display:inline-block;
-    margin-top:20px;
-    font-weight:bold;
+
+/* Place les deux champs de dates sur la même ligne */
+.dates-group {
+    display: flex;
+    gap: 15px;
 }
 
-@media (max-width:900px){
+.dates-group .form-group {
+    flex: 1;
+}
 
+.dates-group .form-group label {
+    width: auto;
+    margin-right: 8px;
+}
+
+
+/* Affiche les cases à cocher verticalement */
+.filters-checkboxes {
+    min-width: 320px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* Aligne chaque case avec son texte */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+    margin-right: 8px;
+}
+
+
+/* Largeur minimale du bouton Rechercher */
+.filters-action {
+    min-width: 150px;
+}
+
+.filters-action button {
+    width: 100%;
+}
+
+
+/* Espace avant le tableau des sorties */
+.sorties-container {
+    margin-top: 30px;
+}
+
+
+/* Permet un défilement horizontal uniquement autour du tableau
+   lorsque l'écran est trop petit */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+/* Structure générale du tableau */
+.sorties-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    background: rgba(255, 255, 255, .65);
+    border: 1px solid #b7c4ca;
+}
+
+
+/* Cellules du tableau */
+.sorties-table th,
+.sorties-table td {
+    padding: 12px 10px;
+    text-align: left;
+    vertical-align: middle;
+
+    border: 1px solid #c5d0d5;
+}
+
+
+/* En-tête bleu et vert du tableau */
+.sorties-table thead {
+    background: linear-gradient(to right, #245d83, #2f806f);
+    color: white;
+}
+
+.sorties-table th {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sorties-table td {
+    font-size: 14px;
+}
+
+
+/* Alternance des couleurs des lignes */
+.sorties-table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, .55);
+}
+
+.sorties-table tbody tr:nth-child(even) {
+    background: rgba(226, 239, 237, .75);
+}
+
+
+/* Mise en évidence d'une ligne au survol */
+.sorties-table tbody tr:hover {
+    background: rgba(255, 221, 102, .28);
+}
+
+
+/* Liens présents dans le tableau */
+.sorties-table a {
+    color: #17699a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.sorties-table a:hover {
+    color: #27966d;
+    text-decoration: underline;
+}
+
+
+/* Lien stylisé comme un bouton pour créer une sortie */
+.create-link {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 20px;
+
+    background: linear-gradient(to right, #2d7dd2, #27ae60);
+    color: white;
+
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.create-link:hover {
+    opacity: .9;
+}
+
+
+/* Adaptation pour les écrans plus petits */
+@media (max-width: 900px) {
+
+    /* Les groupes passent les uns sous les autres */
     .home-heading,
+    .filters-form,
     .filters-fields,
-    .dates-group{
-        flex-direction:column;
+    .dates-group {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .infos-accueil{
-        text-align:left;
+    .infos-accueil {
+        text-align: left;
     }
 
-    .filters-action{
-        text-align:left;
+    .filters-checkboxes {
+        min-width: 0;
+    }
+
+    .filters-action button {
+        width: 100%;
     }
 }

@@ -1,0 +1,148 @@
+@import "app.css";
+
+
+/* Partie principale blanche légèrement transparente */
+.profile-page {
+    min-height: calc(100vh - 120px);
+    padding: 60px 30px;
+
+    background: rgba(255, 255, 255, .88);
+}
+
+
+/* Conteneur du profil */
+.profile-container {
+    max-width: 950px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+}
+
+
+/* Zone de la photo */
+.profile-photo {
+    flex-shrink: 0;
+}
+
+
+/* Remplacement temporaire de la future photo */
+.photo-placeholder {
+    width: 180px;
+    height: 180px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(255, 255, 255, .65);
+    border: 2px solid #c5d0d5;
+    border-radius: 20px;
+
+    color: #61717c;
+    font-weight: bold;
+}
+
+
+/* Partie contenant le titre et les informations */
+.profile-content {
+    width: 500px;
+}
+
+
+/* Titre du profil */
+.profile-content h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    color: #17324d;
+}
+
+
+/* Liste des informations */
+.profile-infos {
+    padding: 25px;
+
+    background: rgba(255, 255, 255, .58);
+    border-radius: 16px;
+}
+
+
+/* Une ligne d'information */
+.profile-infos p {
+    display: flex;
+    margin: 0;
+    padding: 12px 0;
+
+    border-bottom: 1px solid #d6dfdf;
+}
+
+
+/* Supprime la bordure sous la dernière ligne */
+.profile-infos p:last-child {
+    border-bottom: none;
+}
+
+
+/* Nom du champ : Prénom, Nom, Téléphone... */
+.profile-infos span {
+    width: 140px;
+
+    color: #245d83;
+    font-weight: 600;
+}
+
+
+/* Lien Modifier affiché comme un bouton */
+.edit-profile-link {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 22px;
+
+    background: linear-gradient(to right, #2d7dd2, #27ae60);
+    color: white;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.edit-profile-link:hover {
+    opacity: .9;
+}
+
+
+/* Adaptation aux petits écrans */
+@media screen and (max-width: 750px) {
+
+    .profile-page {
+        padding: 35px 20px;
+    }
+
+    .profile-container {
+        flex-direction: column;
+        gap: 35px;
+    }
+
+    .profile-content {
+        width: 100%;
+    }
+
+    .profile-content h1 {
+        text-align: center;
+    }
+
+    .profile-infos p {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .profile-infos span {
+        width: auto;
+    }
+}

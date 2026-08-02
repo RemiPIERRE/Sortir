@@ -3,26 +3,38 @@
 {% block title %}Détail du profil{% endblock %}
 {% block body %}
 
-    <section>
+    <section class="profile-page">
+
+        <div class="profile-container">
+
+        <div class="profile-photo">
 
         {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
 
+        <div class="photo-placeholder">Photo</div>
+
+        </div>
+
+        <div class="profile-content">
+
         <h1>Profil de {{ participant.pseudo }}</h1>
 
-        <div>
-            <p>Prénom : {{ participant.prenom }}</p>
-            <p>Nom : {{ participant.nom }} </p>
-            <p>Téléphone : {{ participant.telephone }} </p>
-            <p>Email : {{ participant.email }} </p>
-            <p>Campus : {{ participant.campus.nom }} </p>
+        <div class="profile-infos">
+            <p><span>Prénom</span> : {{ participant.prenom }}</p>
+            <p><span>Nom</span> : {{ participant.nom }} </p>
+            <p><span>Téléphone</span> : {{ participant.telephone }} </p>
+            <p><span>Email</span> : {{ participant.email }} </p>
+            <p><span>Campus</span> : {{ participant.campus.nom }} </p>
         </div>
 
         {% if est_mon_profil %}
-            <a href="{{ path('app_profile_edit', {id: participant.id}) }}">Modifier</a>
+            <a href="{{ path('app_profile_edit', {id: participant.id}) }}" class="edit-profile-link">Modifier</a>
         {% endif %}
 
-    </section>
+     </div>
+     </div>
 
+    </section>
 
 
 {% endblock %}
