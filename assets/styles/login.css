@@ -1,0 +1,288 @@
+.login-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-family: "Poppins", sans-serif;
+}
+
+.login-presentation {
+    padding: 50px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    color: #ffffff;
+    background: radial-gradient(circle at 8% 10%, rgba(232, 93, 52, .45), transparent 30%),
+    radial-gradient(circle at 92% 18%, rgba(112, 72, 232, .30), transparent 33%),
+    radial-gradient(circle at 80% 88%, rgba(45, 150, 135, .40), transparent 38%),
+    radial-gradient(circle at 25% 95%, rgba(232, 93, 52, .22), transparent 30%),
+    radial-gradient(circle at 55% 45%, rgba(60, 110, 168, .25), transparent 40%),
+    linear-gradient(150deg, #10203a, #182f4c 55%, #17323f);
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.login-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f2803a, #e85d34);
+    color: #fff;
+    font-weight: 700;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-wordmark {
+    font-family: "Maven Pro", sans-serif;
+    font-size: 73px;
+    font-weight: 600;
+}
+
+.login-wordmark .sortir {
+    color: #ffffff;
+}
+
+.login-wordmark .com {
+    color: #e85d34;
+}
+
+.login-campus {
+    color: #e85d34;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+}
+
+.login-presentation h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2.5rem;
+    line-height: 1.25;
+    font-weight: 700;
+    margin: 0;
+    max-width: 12em;
+}
+
+.login-presentation h2 em {
+    color: #e85d34;
+    font-style: italic;
+}
+
+.login-stats {
+    list-style: none;
+    display: flex;
+    gap: 45px;
+    padding: 0;
+    margin: 0;
+}
+
+.login-stats strong {
+    display: block;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.login-stats span {
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .7);
+}
+
+.login-container {
+    background: #f4f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 430px;
+}
+
+.login-label {
+    color: #e85d34;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+}
+
+.login-container h1 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2.4rem;
+    color: #17324d;
+    margin: 0 0 10px;
+}
+
+.login-subtitle {
+    color: #5a6b7a;
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label {
+    font-weight: 600;
+    color: #17324d;
+    margin-bottom: 7px;
+    font-size: .9rem;
+}
+
+.login-form label span {
+    color: #9aa5b1;
+    font-weight: 400;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    padding: 13px 15px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #dcd7cc;
+    border-radius: 12px;
+    font-size: .95rem;
+    color: #17324d;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    outline: none;
+    border-color: #e85d34;
+    box-shadow: 0 0 0 3px rgba(232, 93, 52, .15);
+}
+
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+._remember_me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+._remember_me label {
+    margin: 0;
+    font-weight: 400;
+    color: #5a6b7a;
+}
+
+._remember_me input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+
+._remember_me input {
+    accent-color: #e85d34;
+}
+
+.forgot-password {
+    color: #e85d34;
+    font-weight: 600;
+    font-size: .9rem;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-form button {
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #e85d34;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .15s ease;
+}
+
+.login-form button:hover {
+    background: #d94e26;
+}
+
+.login-box .flash-error {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    background: #fdece7;
+    border: 1px solid #f4b8a3;
+    border-radius: 10px;
+    color: #a23c1e;
+}
+
+@media (max-width: 860px) {
+    .login-page {
+        grid-template-columns: 1fr;
+    }
+
+    .login-presentation {
+        gap: 28px;
+        padding: 40px;
+    }
+
+    .login-presentation h2 {
+        font-size: 1.9rem;
+    }
+
+    .login-stats {
+        gap: 28px;
+        flex-wrap: wrap;
+    }
+}
+
+.login-logo-img {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.login-escalier {
+    display: flex;
+    flex-direction: column;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0;
+    max-width: none;
+}
+
+.login-escalier .mot-1 {
+    align-self: flex-start;
+}
+
+.login-escalier .mot-2 {
+    align-self: center;
+    margin-top: 10px;
+    color: #e85d34;
+    font-style: italic;
+}
+
+.login-escalier .mot-3 {
+    align-self: flex-end;
+    margin-top: 10px;
+}

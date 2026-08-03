@@ -1,6 +1,92 @@
-@import 'cardSortie.css';
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap');
+
 @import 'home.css';
+@import 'cards.css';
+@import 'login.css';
+@import 'navbar.css';
+@import 'profile.css';
+
+:root {
+    --navy-fonce: #12243d;
+    --navy: #17324d;
+    --bleu: #2b4a7a;
+    --corail: #e85d34;
+    --corail-fonce: #d94e26;
+    --creme: #f4f0e8;
+    --gris-fond: #f4f2ee;
+    --gris-bord: #e2e0da;
+    --gris-texte: #5a5a5a;
+    --blanc: #ffffff;
+
+    --etat-en-creation: #8a8a8a;
+    --etat-ouverte: #3c8c5c;
+    --etat-cloturee: #e0a52b;
+    --etat-en-cours: #2b6ca8;
+    --etat-terminee: #7a7a7a;
+    --etat-annulee: #b23a3a;
+    --etat-historisee: #9a9a9a;
+}
+
+* {
+    box-sizing: border-box;
+}
 
 body {
-    background-color: skyblue;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    color: var(--navy);
+    background: var(--gris-fond);
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--corail);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+button:hover {
+    background: var(--corail-fonce);
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--gris-bord);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background: var(--navy);
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f5f5f5;
+}
+
+a {
+    color: var(--corail);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

@@ -4,69 +4,78 @@
 
 {% block body %}
 
-    <section class="accueil-header">
-        <div class="accueil-header-texte">
-            {% if app.user %}
-                <p class="campus-label">— Campus {{ app.user.campus ? app.user.campus.nom : '' }}</p>
-                <h1>Bonjour {{ app.user.prenom }}</h1>
-                <p class="accueil-sous-titre">Découvrez les sorties à venir, ou organisez la vôtre.</p>
-            {% endif %}
+    <section class="home-page">
+        <div class="home-container">
+
+            <div class="home-heading">
+                <div>
+                    <p class="campus-label">— Campus {{ app.user.campus ? app.user.campus.nom : '' }}</p>
+                    <h1>Bonjour {{ app.user.prenom }}</h1>
+                    <p class="accueil-sous-titre">Découvrez les sorties à venir, ou organisez la vôtre.</p>
+                </div>
+
+                <a href="{{ path('app_sortie_create') }}" class="btn-creer">+ Créer une sortie</a>
+            </div>
+
+            <section class="filters-container">
+                <form method="get" class="filters-form">
+                    <div class="filters-fields">
+                        <div class="form-group filter-search">
+                            <label for="nom">Rechercher une sortie</label>
+                            <input type="text" id="nom" name="nom" placeholder="Nom de la sortie...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="campus">Campus</label>
+                            <select id="campus" name="campus">
+                                <option value="">Tous les campus</option>
+                                {% for campus in campusList %}
+                                    <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dateDebut">Du</label>
+                            <input type="date" id="dateDebut" name="dateDebut">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dateFin">Au</label>
+                            <input type="date" id="dateFin" name="dateFin">
+                        </div>
+
+                        <button type="submit" class="btn-filtrer">Filtrer</button>
+                    </div>
+
+                    <div class="filters-checkboxes">
+                        <label class="pilule">
+                            <input type="checkbox" name="organisateur"> Que j'organise
+                        </label>
+                        <label class="pilule">
+                            <input type="checkbox" name="inscrit"> Où je suis inscrit·e
+                        </label>
+                        <label class="pilule">
+                            <input type="checkbox" name="nonInscrit"> Où je ne suis pas inscrit·e
+                        </label>
+                        <label class="pilule">
+                            <input type="checkbox" name="passees"> Terminées
+                        </label>
+                    </div>
+                </form>
+            </section>
+
+            <section class="sorties-container">
+                <section class="liste-sorties">
+                    {% for sortie in sorties %}
+                        {{ include('partials/_card_sortie.html.twig', { sortie: sortie }) }}
+                    {% else %}
+                        <p>Aucune sortie disponible.</p>
+                    {% endfor %}
+                </section>
+            </section>
+
         </div>
-
-        <a href="{{ path('app_sortie_create') }}" class="btn-creer">+ Créer une sortie</a>
-    </section>
-
-    <form method="get" class="barre-filtres">
-        <div class="filtre-champ filtre-recherche">
-            <label for="nom">Rechercher une sortie</label>
-            <input type="text" id="nom" name="nom" placeholder="Nom de la sortie...">
-        </div>
-
-        <div class="filtre-champ">
-            <label for="campus">Campus</label>
-            <select id="campus" name="campus">
-                <option value="">Tous les campus</option>
-                {% for campus in campusList %}
-                    <option value="{{ campus.id }}">{{ campus.nom }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="filtre-champ">
-            <label for="dateDebut">Du</label>
-            <input type="date" id="dateDebut" name="dateDebut">
-        </div>
-
-        <div class="filtre-champ">
-            <label for="dateFin">Au</label>
-            <input type="date" id="dateFin" name="dateFin">
-        </div>
-
-        <button type="submit" class="btn-filtrer">Filtrer</button>
-
-        {# Filtres rapides (cases à cocher stylées en "pilules") #}
-        <div class="filtres-rapides">
-            <label class="pilule">
-                <input type="checkbox" name="organisateur"> Que j'organise
-            </label>
-            <label class="pilule">
-                <input type="checkbox" name="inscrit"> Où je suis inscrit·e
-            </label>
-            <label class="pilule">
-                <input type="checkbox" name="nonInscrit"> Où je ne suis pas inscrit·e
-            </label>
-            <label class="pilule">
-                <input type="checkbox" name="passees"> Terminées
-            </label>
-        </div>
-    </form>
-
-    <section class="liste-sorties">
-        {% for sortie in sorties %}
-            {{ include('partials/_card_sortie.html.twig', { sortie: sortie }) }}
-        {% else %}
-            <p>Aucune sortie disponible.</p>
-        {% endfor %}
     </section>
 
 {% endblock %}

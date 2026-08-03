@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
+use App\Service\EtatSortieManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +19,22 @@ final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(
-        Request          $request,
-        SortieRepository $sortieRepository,
-        CampusRepository $campusRepository
+        Request                $request,
+        SortieRepository       $sortieRepository,
+        CampusRepository       $campusRepository,
+        EntityManagerInterface $em,
+        EtatSortieManager      $stateManager
     ): Response
     {
+        /** @var \App\Entity\Participant $participant */
         $participant = $this->getUser();
+
+        foreach ($sortieRepository->findAll() as $sortie) {
+            $stateManager->refresh($sortie);
+        }
+
+        /** TODO : Déplacer le flush dans une commande cron !! */
+        $em->flush();
 
         $campusList = $campusRepository->findAll();
 
@@ -58,4 +70,5 @@ final class HomeController extends AbstractController
             'campusList' => $campusList,
         ]);
     }
+
 }

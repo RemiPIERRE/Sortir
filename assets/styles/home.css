@@ -1,27 +1,14 @@
-:root {
-    --bleu-fonce: #1b2a4a;
-    --bleu: #2b4a7a;
-    --orange: #f26b3a;
-    --gris-fond: #f4f2ee;
-    --gris-bord: #e2e0da;
-    --gris-texte: #5a5a5a;
-    --blanc: #ffffff;
+.home-page {
+    min-height: calc(100vh - 60px);
 }
 
-body {
-    background: var(--gris-fond);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    color: var(--bleu-fonce);
-    margin: 0;
-}
-
-main {
+.home-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.5rem;
 }
 
-.accueil-header {
+.home-heading {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -31,7 +18,7 @@ main {
 }
 
 .campus-label {
-    color: var(--orange);
+    color: var(--corail);
     font-weight: 700;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -39,10 +26,11 @@ main {
     margin: 0 0 0.3rem;
 }
 
-.accueil-header h1 {
+.home-heading h1 {
     margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
     font-size: 2rem;
-    color: var(--bleu-fonce);
+    color: var(--navy);
 }
 
 .accueil-sous-titre {
@@ -51,73 +39,78 @@ main {
 }
 
 .btn-creer {
-    background: var(--orange);
+    background: var(--corail);
     color: var(--blanc);
     text-decoration: none;
     font-weight: 600;
     padding: 0.7rem 1.3rem;
     border-radius: 10px;
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(242, 107, 58, 0.4);
+    box-shadow: 0 2px 6px rgba(232, 93, 52, 0.4);
     transition: background 0.15s ease;
 }
 
 .btn-creer:hover {
-    background: #e05a2a;
+    background: var(--corail-fonce);
+    text-decoration: none;
 }
 
-.barre-filtres {
+.filters-container {
     background: var(--blanc);
     border: 1px solid var(--gris-bord);
     border-radius: 14px;
     padding: 1.1rem 1.3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+}
+
+.filters-fields {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     gap: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.filtre-champ {
+.form-group {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
 }
 
-.filtre-champ label {
+.form-group label {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--gris-texte);
 }
 
-.filtre-champ input,
-.filtre-champ select {
+.form-group input,
+.form-group select {
     border: 1px solid var(--gris-bord);
     border-radius: 8px;
     padding: 0.55rem 0.7rem;
     font-size: 0.9rem;
     background: var(--gris-fond);
-    color: var(--bleu-fonce);
+    color: var(--navy);
+    width: auto;
 }
 
-.filtre-champ input:focus,
-.filtre-champ select:focus {
-    outline: 2px solid var(--bleu);
+.form-group input:focus,
+.form-group select:focus {
+    outline: 2px solid var(--corail);
     outline-offset: 1px;
     background: var(--blanc);
 }
 
-.filtre-recherche {
+.filter-search {
     flex: 1 1 220px;
 }
 
-.filtre-recherche input {
+.filter-search input {
     width: 100%;
-    box-sizing: border-box;
 }
 
 .btn-filtrer {
-    background: var(--bleu-fonce);
+    background: var(--navy-fonce);
     color: var(--blanc);
     border: none;
     border-radius: 8px;
@@ -132,16 +125,16 @@ main {
     background: var(--bleu);
 }
 
-.filtres-rapides {
-    flex-basis: 100%;
+.filters-checkboxes {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
-    margin-top: 0.4rem;
+    margin-top: 1rem;
 }
 
 .pilule {
     display: inline-flex;
+    white-space: nowrap;
     align-items: center;
     gap: 0.4rem;
     background: var(--gris-fond);
@@ -150,21 +143,21 @@ main {
     padding: 0.4rem 0.9rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--bleu-fonce);
+    color: var(--navy);
     cursor: pointer;
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .pilule:hover {
-    border-color: var(--bleu);
+    border-color: var(--corail);
 }
 
 .pilule:has(input:checked) {
-    background: var(--bleu-fonce);
+    background: var(--navy-fonce);
     color: var(--blanc);
-    border-color: var(--bleu-fonce);
+    border-color: var(--navy-fonce);
 }
 
 .pilule input {
-    accent-color: var(--orange);
+    accent-color: var(--corail);
 }
