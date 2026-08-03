@@ -11,74 +11,79 @@ use Doctrine\Persistence\ManagerRegistry;
 class SortieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
-        {
-            parent::__construct($registry, Sortie::class);
-        }
+    {
+        parent::__construct($registry, Sortie::class);
+    }
 
     public function findSortiesParCampus(
-        Campus $campus,
-        ?string $nomSortie,
-        ?string $dateDebut,
-        ?string $dateFin,
-        bool $organisateur,
-        bool $inscrit,
-        bool $nonInscrit,
-        bool $passees,
+        ?Campus     $campus,
+        ?string     $nomSortie,
+        ?string     $dateDebut,
+        ?string     $dateFin,
+        bool        $organisateur,
+        bool        $inscrit,
+        bool        $nonInscrit,
+        bool        $passees,
         Participant $participant
-    ): array
-    {
-    $queryBuilder = $this->createQueryBuilder('s');
+    ): array {
+        $queryBuilder = $this->createQueryBuilder('s');
 
-    $queryBuilder
-        ->where('s.campus = :campus')
-        ->setParameter('campus', $campus);
-
-    if ($nomSortie){
         $queryBuilder
-            ->andWhere('s.nom LIKE :nomSortie')
-            ->setParameter('nomSortie', '%'.$nomSortie.'%');
-    }
+            ->join('s.etat', 'e')
+            ->andWhere('e.libelle != :etatCreation')
+            ->setParameter('etatCreation', 'En création');
 
-    if ($dateDebut) {
-        $queryBuilder
-            ->andWhere('s.dateHeureDebut >= :dateDebut')
-            ->setParameter('dateDebut', $dateDebut);
-    }
+        if ($campus) {
+            $queryBuilder
+                ->andWhere('s.campus = :campus')
+                ->setParameter('campus', $campus);
+        }
 
-    if ($dateFin) {
-        $queryBuilder
-            ->andWhere('s.dateHeureDebut <= :dateFin')
-            ->setParameter('dateFin', $dateFin);
-    }
+        if ($nomSortie) {
+            $queryBuilder
+                ->andWhere('s.nom LIKE :nomSortie')
+                ->setParameter('nomSortie', '%' . $nomSortie . '%');
+        }
 
-    if ($organisateur) {
-        $queryBuilder
-            ->andWhere('s.organisateur = :participant')
-            ->setParameter('participant', $participant);
-    }
+        if ($dateDebut) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', new \DateTimeImmutable($dateDebut));
+        }
 
-    if ($inscrit) {
-        $queryBuilder
-            ->andWhere(':participant MEMBER OF s.inscrits')
-            ->setParameter('participant', $participant);
-    }
+        if ($dateFin) {
+            $dateFinExclue = (new \DateTimeImmutable($dateFin))->modify('+1 day');
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut < :dateFin')
+                ->setParameter('dateFin', $dateFinExclue);
+        }
 
-    if ($nonInscrit) {
-        $queryBuilder
-            ->andWhere(':participant NOT MEMBER OF s.inscrits')
-            ->setParameter('participant', $participant);
-    }
+        if ($organisateur) {
+            $queryBuilder
+                ->andWhere('s.organisateur = :participant')
+                ->setParameter('participant', $participant);
+        }
 
-    if ($passees) {
-        $queryBuilder
-            ->andWhere('s.dateHeureDebut < :maintenant')
-            ->setParameter('maintenant', new \DateTimeImmutable());
-    }
+        if ($inscrit && !$nonInscrit) {
+            $queryBuilder
+                ->andWhere(':participant MEMBER OF s.inscrits')
+                ->setParameter('participant', $participant);
+        }
 
+        if ($nonInscrit && !$inscrit) {
+            $queryBuilder
+                ->andWhere(':participant NOT MEMBER OF s.inscrits')
+                ->setParameter('participant', $participant);
+        }
 
+        if ($passees) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut < :maintenant')
+                ->setParameter('maintenant', new \DateTimeImmutable());
+        }
 
-    return $queryBuilder
-        ->getQuery()
-        ->getResult();
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
     }
-    }
+}

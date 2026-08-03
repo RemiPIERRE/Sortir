@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connexion</title>
+
+    <link rel="stylesheet" href="../assets/styles/login.css">
+    <link rel="stylesheet" href="../assets/styles/app.css">
+</head>
+
+<body>
+
+<main class="login-page">
+
+    <section class="login-presentation">
+
+        <img src="#" alt="Logo Sortir.com">
+
+        <h2>
+            <span class="sortir">Sortir</span><span class="com">.com</span>
+        </h2>
+
+        <p>
+            Organisez et partagez vos sorties entre stagiaires
+        </p>
+
+    </section>
+
+    <section class="login-container">
+
+        <h1>Se connecter</h1>
+
+
+<!--
+        <div class="flash-error">
+            Identifiant ou mot de passe incorrect.
+        </div>
+        -->
+
+
+        <form method="post" class="login-form">
+
+            <label for="username">Identifiant</label>
+
+            <input
+                type="text"
+                name="_username"
+                id="username"
+                autocomplete="username"
+                required
+                autofocus
+            >
+
+            <label for="password">Mot de passe</label>
+
+            <input
+                type="password"
+                name="_password"
+                id="password"
+                autocomplete="current-password"
+                required
+            >
+
+            <div class="_remember_me">
+
+                <input
+                    type="checkbox"
+                    name="_remember_me"
+                    id="_remember_me"
+                >
+
+                <label for="_remember_me">
+                    Se souvenir de moi
+                </label>
+
+            </div>
+
+            <button type="submit">
+                Se connecter
+            </button>
+
+        </form>
+
+        <a href="#" class="forgot-password">
+            Mot de passe oublié ?
+        </a>
+
+    </section>
+
+</main>
+
+</body>
+</html>

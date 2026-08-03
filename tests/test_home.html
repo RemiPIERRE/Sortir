@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Accueil</title>
+
+
+    <link rel="stylesheet" href="../assets/styles/home.css">
+
+</head>
+
+<body>
+
+<header class="home-header">
+
+    <div>
+        <h1>Accueil</h1>
+
+        <a href="#" class="admin-link">
+            Administration
+        </a>
+    </div>
+
+    <section class="infos-accueil">
+        <p>Date du jour : 31/07/2026</p>
+        <p>Participant : Jeanine L.</p>
+    </section>
+
+</header>
+
+<section class="home-page">
+
+    <div class="home-container">
+        <section class="filters-container">
+
+            <h2>Filtrer les sorties</h2>
+
+            <form method="get" class="filters-form">
+
+                <div class="filters-fields">
+
+                    <div class="form-group">
+                        <label for="campus">Campus</label>
+
+                        <select id="campus" name="campus">
+                            <option value="">Tous les campus</option>
+                            <option value="1">Nantes</option>
+                            <option value="2">Rennes</option>
+                            <option value="3">Chartres-de-Bretagne</option>
+                            <option value="4">Distanciel</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nom">
+                            Le nom de la sortie contient
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nom"
+                            name="nom"
+                            placeholder="Rechercher"
+                        >
+                    </div>
+
+                    <div class="dates-group">
+
+                        <div class="form-group">
+                            <label for="dateDebut">Entre</label>
+
+                            <input
+                                type="date"
+                                id="dateDebut"
+                                name="dateDebut"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dateFin">Et</label>
+
+                            <input
+                                type="date"
+                                id="dateFin"
+                                name="dateFin"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="filters-checkboxes">
+
+                    <div class="checkbox-group">
+                        <input
+                            type="checkbox"
+                            id="organisateur"
+                            name="organisateur"
+                        >
+
+                        <label for="organisateur">
+                            Sorties dont je suis l'organisateur/trice
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input
+                            type="checkbox"
+                            id="inscrit"
+                            name="inscrit"
+                        >
+
+                        <label for="inscrit">
+                            Sorties auxquelles je suis inscrit/e
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input
+                            type="checkbox"
+                            id="nonInscrit"
+                            name="nonInscrit"
+                        >
+
+                        <label for="nonInscrit">
+                            Sorties auxquelles je ne suis pas inscrit/e
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input
+                            type="checkbox"
+                            id="passees"
+                            name="passees"
+                        >
+
+                        <label for="passees">
+                            Sorties terminées
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="filters-action">
+                    <button type="submit">
+                        Rechercher
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+
+        <section class="sorties-container">
+
+            <div class="table-wrapper">
+
+                <table class="sorties-table">
+
+                    <thead>
+                    <tr>
+                        <th>Nom de la sortie</th>
+                        <th>Date de la sortie</th>
+                        <th>Clôture</th>
+                        <th>Inscrits / Places</th>
+                        <th>État</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr>
+                        <td>Philo</td>
+                        <td>02/08/2026 18:30</td>
+                        <td>01/08/2026</td>
+                        <td>8 / 8</td>
+                        <td>En cours</td>
+                        <td>Oui</td>
+                        <td>
+                            <a href="#">Spinoz A.</a>
+                        </td>
+                        <td>
+                            <a href="#">Afficher</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Origamie</td>
+                        <td>05/08/2026 14:00</td>
+                        <td>03/08/2026</td>
+                        <td>3 / 5</td>
+                        <td>Clôturée</td>
+                        <td>Non</td>
+                        <td>
+                            <a href="#">Rémi S.</a>
+                        </td>
+                        <td>
+                            <a href="#">Afficher</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Perles</td>
+                        <td>10/08/2026 10:30</td>
+                        <td>08/08/2026</td>
+                        <td>2 / 12</td>
+                        <td>Clôturée</td>
+                        <td>Oui</td>
+                        <td>
+                            <a href="#">Jojo56</a>
+                        </td>
+                        <td>
+                            <a href="#">Afficher</a>
+                            <a href="#">Se désister</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Concert métal</td>
+                        <td>15/08/2026 20:00</td>
+                        <td>12/08/2026</td>
+                        <td>8 / 10</td>
+                        <td>Ouverte</td>
+                        <td>Oui</td>
+                        <td>
+                            <a href="#">Raymond D.</a>
+                        </td>
+                        <td>
+                            <a href="#">Afficher</a>
+                            <a href="#">Se désister</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Jardinage</td>
+                        <td>18/08/2026 09:00</td>
+                        <td>16/08/2026</td>
+                        <td>3 / 5</td>
+                        <td>Ouverte</td>
+                        <td>Non</td>
+                        <td>
+                            <a href="#">Rémi S.</a>
+                        </td>
+                        <td>
+                            <a href="#">Afficher</a>
+                            <a href="#">S'inscrire</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Cinéma</td>
+                        <td>22/08/2026 19:30</td>
+                        <td>20/08/2026</td>
+                        <td>0 / 10</td>
+                        <td>En création</td>
+                        <td>Non</td>
+                        <td>Jeanine L.</td>
+                        <td>
+                            <a href="#">Modifier</a>
+                            <a href="#">Publier</a>
+                            <a href="#">Supprimer</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Pâte à sel</td>
+                        <td>25/08/2026 15:00</td>
+                        <td>23/08/2026</td>
+                        <td>0 / 5</td>
+                        <td>Ouverte</td>
+                        <td>Non</td>
+                        <td>Jeanine L.</td>
+                        <td>
+                            <a href="#">Afficher</a>
+                            <a href="#">S'inscrire</a>
+                            <a href="#">Annuler</a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <a href="#" class="create-link">
+                Créer une sortie
+            </a>
+
+        </section>
+
+    </div>
+
+</section>
+
+</body>
+</html>
