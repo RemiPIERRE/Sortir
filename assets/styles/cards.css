@@ -1,0 +1,230 @@
+.liste-sorties {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.card-sortie {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-top: 4px solid var(--corail);
+}
+
+.card-sortie:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+}
+
+.card-sortie header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: transparent;
+}
+
+.card-sortie h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--blanc);
+    background: var(--gris-texte);
+}
+
+.badge-ouverte {
+    background: var(--etat-ouverte);
+}
+
+.badge-cloturee {
+    background: var(--etat-cloturee);
+}
+
+.badge-en-cours {
+    background: var(--etat-en-cours);
+}
+
+.badge-terminee {
+    background: var(--etat-terminee);
+}
+
+.badge-annulee {
+    background: var(--etat-annulee);
+}
+
+.badge-historisee {
+    background: var(--etat-historisee);
+}
+
+.badge-en-creation {
+    background: var(--etat-en-creation);
+}
+
+.card-date {
+    margin: 0;
+    color: var(--gris-texte);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.card-lieu {
+    margin: 0;
+    color: var(--gris-texte);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.card-ico {
+    color: var(--corail);
+    flex-shrink: 0;
+}
+
+.card-separator {
+    border-top: 1px dashed var(--gris-bord);
+    margin: 0.3rem 0;
+}
+
+.card-sortie footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+.card-orga {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-orga-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--navy-fonce);
+    color: var(--blanc);
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-orga a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-orga a:hover {
+    text-decoration: underline;
+}
+
+.card-places {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gris-texte);
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.card-progress {
+    display: inline-block;
+    width: 46px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--gris-bord);
+    overflow: hidden;
+}
+
+.card-progress-fill {
+    display: block;
+    height: 100%;
+    background: var(--corail);
+    border-radius: 999px;
+}
+
+.card-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+    background: var(--navy-fonce);
+    color: var(--blanc);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s ease;
+}
+
+.card-banner:hover {
+    background: var(--bleu);
+    text-decoration: none;
+}
+
+.card-banner-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.card-banner.is-orga .card-banner-status {
+    color: var(--corail);
+}
+
+.card-banner.is-inscrit .card-banner-status {
+    color: #6fcf97;
+}
+
+.card-banner-arrow {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.liste-sorties > p {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--gris-texte);
+    padding: 2rem;
+}
+
+.card-orga-avatar {
+    overflow: hidden;
+}
+
+.card-orga-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

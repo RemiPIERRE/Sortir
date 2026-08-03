@@ -229,10 +229,8 @@ class SortieController extends AbstractController
 
         $sortie->removeInscrit($user);
 
-        // Si quelqu'un se désiste et que la sortie était clôturée, on la rouvre (si la date limite n'est pas dépassée)
-
-        if($sortie->getEtat()->getLibelle() === EtatSortieManager::CLOSED
-        && new \DateTimeImmutable() <= $sortie->getDateLimiteInscription()) {
+        if ($sortie->getEtat()->getLibelle() === EtatSortieManager::CLOSED
+            && new \DateTimeImmutable() <= $sortie->getDateLimiteInscription()) {
             $sortie->setEtat($stateManager->getState(EtatSortieManager::OPEN));
         }
 

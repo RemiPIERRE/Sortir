@@ -1,0 +1,73 @@
+{% set estOrganisateur = sortie.organisateur and app.user and sortie.organisateur.id == app.user.id %}
+{% set estInscrit = app.user and app.user in sortie.inscrits %}
+{% set nbInscrits = sortie.inscrits|length %}
+{% set estComplet = nbInscrits >= sortie.nbInscriptionMax %}
+{% set placesRatio = sortie.nbInscriptionMax > 0 ? (nbInscrits / sortie.nbInscriptionMax * 100)|round : 0 %}
+
+<article class="card-sortie">
+
+    <div class="card-body">
+
+        <header>
+            <h3>{{ sortie.nom }}</h3>
+
+            {% if sortie.etat %}
+                {% set etatSlug = sortie.etat.libelle|lower|replace({' ': '-', 'é': 'e', 'è': 'e', 'û': 'u', 'ô': 'o'}) %}
+                <span class="badge badge-{{ etatSlug }}">{{ sortie.etat.libelle }}</span>
+            {% endif %}
+        </header>
+
+        <p class="card-date">
+            <span class="card-ico">📅</span>
+            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y à H:i') : '' }}
+        </p>
+
+        <p class="card-lieu">
+            <span class="card-ico">📍</span>
+            {{ sortie.lieu ? sortie.lieu.nom : '' }}
+        </p>
+
+        <p class="card-lieu">
+            <span class="card-ico">🎓</span>
+            {% if sortie.campus %}{{ sortie.campus.nom }}{% endif %}
+        </p>
+
+        <div class="card-separator"></div>
+
+        <footer>
+            <span class="card-orga-avatar">
+                    {% if sortie.organisateur.photo %}
+                        <img src="{{ asset('images/photos/' ~ sortie.organisateur.photo) }}" alt="">
+                    {% else %}
+                        {{ sortie.organisateur.prenom|first|upper }}{{ sortie.organisateur.nom|first|upper }}
+                    {% endif %}
+                </span>
+
+            <span class="card-places">
+                <span class="card-progress"><span class="card-progress-fill"
+                                                  style="width: {{ placesRatio }}%"></span></span>
+                {{ nbInscrits }}/{{ sortie.nbInscriptionMax }}
+            </span>
+        </footer>
+
+    </div>
+
+    <a href="{{ path('app_sortie_show', { id: sortie.id }) }}" class="card-banner
+        {%- if estOrganisateur %} is-orga{% elseif estInscrit %} is-inscrit{% endif %}">
+
+        <span class="card-banner-status">
+            {% if estOrganisateur %}
+                Vous organisez
+            {% elseif estInscrit %}
+                Inscrit·e
+            {% elseif estComplet %}
+                Complet
+            {% else %}
+                S'inscrire
+            {% endif %}
+        </span>
+
+        <span class="card-banner-arrow">→</span>
+    </a>
+
+</article>

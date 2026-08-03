@@ -49,8 +49,14 @@ class ProfileType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'required' => false,
-                'first_options' => ['label' => 'Modification du mot de passe'],
-                'second_options' => ['label' => 'Confirmation mot de passe'],
+                'first_options' => [
+                    'label' => 'Modification du mot de passe',
+                    'attr' => ['autocomplete' => 'new-password'],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmation mot de passe',
+                    'attr' => ['autocomplete' => 'new-password'],
+                ],
                 'constraints' => [
                     new Length(
                         min: 8,

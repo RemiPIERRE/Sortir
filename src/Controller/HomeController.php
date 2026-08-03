@@ -31,8 +31,9 @@ final class HomeController extends AbstractController
 
         foreach ($sortieRepository->findAll() as $sortie) {
             $stateManager->refresh($sortie);
-            }
+        }
 
+        /** TODO : Déplacer le flush dans une commande cron !! */
         $em->flush();
 
         $campusList = $campusRepository->findAll();

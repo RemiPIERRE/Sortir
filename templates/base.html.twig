@@ -2,31 +2,63 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}
-    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Sortir.com{% endblock %}</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-32.png') }}">
+
+    {% block stylesheets %}{% endblock %}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
-
 </head>
 <body>
 
+{% if app.user %}
     <header>
-        <!-- Logo Sortir.com -->
-        <nav>
-            <ul>
-                {%if app.user%}
-                <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                <li><a href="{{ path('app_profile', {id: app.user.id}) }}">Mon profil</a></li>
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-                {% else %}
-                <li><a href="{{ path('app_login') }}">Se connecter</a></li>
-                {% endif %}
-            </ul>
+        <nav class="navbar">
+
+            <div class="navbar-left">
+                <a href="{{ path('app_home') }}" class="navbar-brand">
+                    <img src="{{ asset('images/logo.png') }}" alt="Sortir.com" class="navbar-logo">
+                    <span class="navbar-wordmark">sortir<span class="com">.com</span></span>
+                </a>
+
+                <div class="navbar-nav">
+                    <span class="navbar_nav_home">
+                        <a href="{{ path('app_home') }}">Accueil</a>
+                    </span>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_home') }}">Administration</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="navbar-right">
+                <span class="navbar-date">{{ "now"|date("d/m/Y") }}</span>
+
+                <a href="{{ path('app_profile', {id: app.user.id}) }}" class="navbar-user">
+                    <span class="navbar-avatar">
+                        {% if app.user.photo %}
+                            <img src="{{ asset('images/photos/' ~ app.user.photo) }}" alt="">
+                        {% else %}
+                            {{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}
+                        {% endif %}
+                    </span>
+                    <span class="navbar-user-info">
+                        <span class="navbar-user-name">{{ app.user.prenom }} {{ app.user.nom|first|upper }}.</span>
+                        <span
+                            class="navbar-user-role">{{ is_granted('ROLE_ADMIN') ? 'Administrateur' : 'Participant' }}</span>
+                    </span>
+                </a>
+
+                <a href="{{ path('app_logout') }}" class="navbar-logout" data-turbo-prefetch="false"
+                   title="Se déconnecter">⇥</a>
+            </div>
+
         </nav>
     </header>
+{% endif %}
 
 <main>
     {% for label, messages in app.flashes %}

@@ -1,31 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail du profil{% endblock %}
+{% block title %}Profil de {{ participant.pseudo }}{% endblock %}
+
 {% block body %}
 
-    <section>
+    <div class="profile-page">
 
-        {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
+        <a href="{{ path('app_home') }}" class="profile-back">← Retour</a>
 
-        <h1>Profil de {{ participant.pseudo }}</h1>
+        <section class="profile-hero">
+            <div class="profile-avatar">
+                {% if participant.photo %}
+                    <img src="{{ asset('images/photos/' ~ participant.photo) }}" alt="">
+                {% else %}
+                    {{ participant.prenom|first|upper }}{{ participant.nom|first|upper }}
+                {% endif %}
+            </div>
 
-        <div>
+            <div class="profile-hero-info">
+                <h1>{{ participant.prenom }} {{ participant.nom }}</h1>
+                <p class="profile-meta">@{{ participant.pseudo }} ·
+                    Campus {{ participant.campus ? participant.campus.nom : '' }}</p>
 
-            {% if participant.photo %}
-                <img src="{{ asset('images/photos/' ~ participant.photo) }}" alt="Photo de profil de {{ participant.pseudo }}" width="150">
-            {% endif %}
+                {% if est_mon_profil %}
+                    <a href="{{ path('app_profile_edit', {id: participant.id}) }}" class="profile-edit-btn">Modifier mon
+                        profil</a>
+                {% else %}
+                    <span class="profile-badge">Profil public</span>
+                {% endif %}
+            </div>
+        </section>
 
-            <p>Prénom : {{ participant.prenom }}</p>
-            <p>Nom : {{ participant.nom }} </p>
-            <p>Téléphone : {{ participant.telephone }} </p>
-            <p>Email : {{ participant.email }} </p>
-            <p>Campus : {{ participant.campus.nom }} </p>
-        </div>
+        <section class="profile-card">
+            <h2>Coordonnées</h2>
 
-        {% if est_mon_profil %}
-            <a href="{{ path('app_profile_edit', {id: participant.id}) }}">Modifier</a>
-        {% endif %}
+            <div class="profile-fields">
+                <div class="profile-field">
+                    <span class="profile-field-label">Téléphone</span>
+                    <span class="profile-field-value">{{ participant.telephone ?: '—' }}</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Email</span>
+                    <span class="profile-field-value">{{ participant.email }}</span>
+                </div>
+            </div>
+        </section>
 
-    </section>
+    </div>
 
 {% endblock %}
