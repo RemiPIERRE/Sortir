@@ -1,286 +1,164 @@
-@import "app.css";
 
-
-/* Inclut le padding et les bordures dans la largeur des éléments */
-* {
-    box-sizing: border-box;
+.home-page {
+    min-height: calc(100vh - 60px);
 }
 
-
-/* Fond général visible derrière le header et la partie transparente */
-body {
-    margin: 0;
-
-    background:
-        radial-gradient(circle at 10% 15%, rgba(52, 152, 219, .35), transparent 25%),
-        radial-gradient(circle at 88% 12%, rgba(241, 196, 15, .35), transparent 25%),
-        radial-gradient(circle at 88% 78%, rgba(46, 204, 113, .35), transparent 25%),
-        radial-gradient(circle at 12% 88%, rgba(230, 126, 34, .35), transparent 25%),
-        linear-gradient(140deg, #10324f, #1d6572, #2e7564);
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
 }
 
-
-/* En-tête placé directement sur le fond coloré */
-.home-header {
-    min-height: 120px;
-    padding: 25px 40px;
-
+.home-heading {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-
-    color: white;
-    background: transparent;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
 }
 
-
-/* Couleur du titre Accueil */
-.home-header h1 {
-    color: #F4A261;
+.campus-label {
+    color: var(--corail);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.3rem;
 }
 
-
-/* Partie principale blanche et légèrement transparente */
-.home-page {
-    min-height: calc(100vh - 120px);
-    width: 100%;
-
-    background: rgba(255, 255, 255, .88);
+.home-heading h1 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2rem;
+    color: var(--navy);
 }
 
-
-/* Limite la largeur du contenu et le centre */
-.home-container {
-    max-width: 1400px;
-    margin: auto;
-    padding: 30px 40px;
+.accueil-sous-titre {
+    margin: 0.4rem 0 0;
+    color: var(--gris-texte);
 }
 
-
-/* Informations sur la date et le participant */
-.infos-accueil {
-    text-align: right;
+.btn-creer {
+    background: var(--corail);
+    color: var(--blanc);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(232, 93, 52, 0.4);
+    transition: background 0.15s ease;
 }
 
+.btn-creer:hover {
+    background: var(--corail-fonce);
+    text-decoration: none;
+}
 
-/* Bloc contenant tous les filtres */
 .filters-container {
-    margin-bottom: 30px;
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
 }
 
-.filters-container h2 {
-    margin-bottom: 20px;
-}
-
-
-/* Organisation des trois parties :
-   champs, cases à cocher et bouton Rechercher */
-.filters-form {
+.filters-fields {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-end;
-    gap: 35px;
+    gap: 1rem;
 }
 
-
-/* Les champs et les cases occupent chacun une partie de l'espace */
-.filters-fields,
-.filters-checkboxes {
-    flex: 1;
-}
-
-
-/* Aligne le label et son champ sur une même ligne */
 .form-group {
     display: flex;
-    align-items: center;
-    margin-bottom: 14px;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
-
-/* Largeur identique pour les labels */
 .form-group label {
-    width: 210px;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gris-texte);
 }
 
-
-/* Les champs utilisent l'espace restant */
 .form-group input,
 .form-group select {
-    flex: 1;
-    min-width: 0;
-}
-
-
-/* Place les deux champs de dates sur la même ligne */
-.dates-group {
-    display: flex;
-    gap: 15px;
-}
-
-.dates-group .form-group {
-    flex: 1;
-}
-
-.dates-group .form-group label {
+    border: 1px solid var(--gris-bord);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.9rem;
+    background: var(--gris-fond);
+    color: var(--navy);
     width: auto;
-    margin-right: 8px;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+    outline: 2px solid var(--corail);
+    outline-offset: 1px;
+    background: var(--blanc);
+}
 
-/* Affiche les cases à cocher verticalement */
+.filter-search {
+    flex: 1 1 220px;
+}
+
+.filter-search input {
+    width: 100%;
+}
+
+.btn-filtrer {
+    background: var(--navy-fonce);
+    color: var(--blanc);
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-filtrer:hover {
+    background: var(--bleu);
+}
+
 .filters-checkboxes {
-    min-width: 320px;
-
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
 }
 
-
-/* Aligne chaque case avec son texte */
-.checkbox-group {
-    display: flex;
+.pilule {
+    display: inline-flex;
+    white-space: nowrap;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.checkbox-group input {
-    width: auto;
-    margin-right: 8px;
-}
-
-
-/* Largeur minimale du bouton Rechercher */
-.filters-action {
-    min-width: 150px;
-}
-
-.filters-action button {
-    width: 100%;
-}
-
-
-/* Espace avant le tableau des sorties */
-.sorties-container {
-    margin-top: 30px;
-}
-
-
-/* Permet un défilement horizontal uniquement autour du tableau
-   lorsque l'écran est trop petit */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-}
-
-
-/* Structure générale du tableau */
-.sorties-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    background: rgba(255, 255, 255, .65);
-    border: 1px solid #b7c4ca;
-}
-
-
-/* Cellules du tableau */
-.sorties-table th,
-.sorties-table td {
-    padding: 12px 10px;
-    text-align: left;
-    vertical-align: middle;
-
-    border: 1px solid #c5d0d5;
-}
-
-
-/* En-tête bleu et vert du tableau */
-.sorties-table thead {
-    background: linear-gradient(to right, #245d83, #2f806f);
-    color: white;
-}
-
-.sorties-table th {
-    font-size: 14px;
+    gap: 0.4rem;
+    background: var(--gris-fond);
+    border: 1px solid var(--gris-bord);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.sorties-table td {
-    font-size: 14px;
+.pilule:hover {
+    border-color: var(--corail);
 }
 
-
-/* Alternance des couleurs des lignes */
-.sorties-table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, .55);
+.pilule:has(input:checked) {
+    background: var(--navy-fonce);
+    color: var(--blanc);
+    border-color: var(--navy-fonce);
 }
 
-.sorties-table tbody tr:nth-child(even) {
-    background: rgba(226, 239, 237, .75);
-}
-
-
-/* Mise en évidence d'une ligne au survol */
-.sorties-table tbody tr:hover {
-    background: rgba(255, 221, 102, .28);
-}
-
-
-/* Liens présents dans le tableau */
-.sorties-table a {
-    color: #17699a;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.sorties-table a:hover {
-    color: #27966d;
-    text-decoration: underline;
-}
-
-
-/* Lien stylisé comme un bouton pour créer une sortie */
-.create-link {
-    display: inline-block;
-    margin-top: 22px;
-    padding: 12px 20px;
-
-    background: linear-gradient(to right, #2d7dd2, #27ae60);
-    color: white;
-
-    border-radius: 10px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.create-link:hover {
-    opacity: .9;
-}
-
-
-/* Adaptation pour les écrans plus petits */
-@media (max-width: 900px) {
-
-    /* Les groupes passent les uns sous les autres */
-    .home-heading,
-    .filters-form,
-    .filters-fields,
-    .dates-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .infos-accueil {
-        text-align: left;
-    }
-
-    .filters-checkboxes {
-        min-width: 0;
-    }
-
-    .filters-action button {
-        width: 100%;
-    }
+.pilule input {
+    accent-color: var(--corail);
 }

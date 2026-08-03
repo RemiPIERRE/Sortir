@@ -2,31 +2,39 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}
-    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Sortir.com{% endblock %}</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-32.png') }}">
+
+    {% block stylesheets %}{% endblock %}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
-
 </head>
 <body>
 
-    <header>
-        <!-- Logo Sortir.com -->
-        <nav>
-            <ul>
-                {%if app.user%}
-                <li><a href="{{ path('app_home') }}">Accueil</a></li>
-                <li><a href="{{ path('app_profile', {id: app.user.id}) }}">Mon profil</a></li>
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-                {% else %}
-                <li><a href="{{ path('app_login') }}">Se connecter</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+<header>
+    <!-- Logo Sortir.com -->
+    <nav>
+        <ul>
+            {% if app.user %}
+                <nav>
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li><a href="{{ path('app_profile', {id: app.user.id}) }}">Mon profil</a></li>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('app_admin_home') }}">Administration</a></li>
+                        {% endif %}
+
+                        <li><a href="{{ path('app_logout') }}" data-turbo-prefetch="false">Se déconnecter</a></li>
+                    </ul>
+                </nav>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
 <main>
     {% for label, messages in app.flashes %}

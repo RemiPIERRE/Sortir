@@ -1,40 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail du profil{% endblock %}
+{% block title %}Profil de {{ participant.pseudo }}{% endblock %}
+
 {% block body %}
 
-    <section class="profile-page">
 
-        <div class="profile-container">
+    <div class="profile-page">
+        <section class="profile-hero">
+            <div class="profile-avatar">
+                {% if participant.photo %}
+                    <img src="{{ asset('images/photos/' ~ participant.photo) }}" alt="">
+                {% else %}
+                    {{ participant.prenom|first|upper }}{{ participant.nom|first|upper }}
+                {% endif %}
+            </div>
 
-        <div class="profile-photo">
+            <div class="profile-hero-info">
+                <h1>{{ participant.prenom }} {{ participant.nom }}</h1>
+                <p class="profile-meta">@{{ participant.pseudo }} ·
+                    Campus {{ participant.campus ? participant.campus.nom : '' }}</p>
 
-        {# <img src="{{ asset('') }}" alt="Photo de profil"> #}
+                {% if est_mon_profil %}
+                    <a href="{{ path('app_profile_edit', {id: participant.id}) }}" class="profile-edit-btn">Modifier mon
+                        profil</a>
+                {% else %}
+                    <span class="profile-badge">Profil public</span>
+                {% endif %}
+            </div>
+        </section>
 
-        <div class="photo-placeholder">Photo</div>
+        <section class="profile-card">
+            <h2>Coordonnées</h2>
 
-        </div>
+            <div class="profile-fields">
+                <div class="profile-field">
+                    <span class="profile-field-label">Téléphone</span>
+                    <span class="profile-field-value">{{ participant.telephone ?: '—' }}</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Email</span>
+                    <span class="profile-field-value">{{ participant.email }}</span>
+                </div>
+            </div>
+        </section>
 
-        <div class="profile-content">
 
-        <h1>Profil de {{ participant.pseudo }}</h1>
-
-        <div class="profile-infos">
-            <p><span>Prénom</span> : {{ participant.prenom }}</p>
-            <p><span>Nom</span> : {{ participant.nom }} </p>
-            <p><span>Téléphone</span> : {{ participant.telephone }} </p>
-            <p><span>Email</span> : {{ participant.email }} </p>
-            <p><span>Campus</span> : {{ participant.campus.nom }} </p>
-        </div>
-
-        {% if est_mon_profil %}
-            <a href="{{ path('app_profile_edit', {id: participant.id}) }}" class="edit-profile-link">Modifier</a>
-        {% endif %}
-
-     </div>
-     </div>
-
-    </section>
-
+    </div>
 
 {% endblock %}

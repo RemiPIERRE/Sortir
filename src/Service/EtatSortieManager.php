@@ -121,6 +121,13 @@ class EtatSortieManager
             $current = self::CLOSED;
         }
 
+        // Rajout de la condition du nombre d'inscrits maximum atteint pour la clôture des inscriptions
+
+        if (self::OPEN === $current && $sortie->getInscrits()->count() >= $sortie->getNbInscriptionMax()) {
+            $sortie->setEtat($this->getState(self::CLOSED));
+            $current = self::CLOSED;
+        }
+
         if (\in_array($current, [self::OPEN, self::CLOSED], true)
             && $now >= $sortie->getDateHeureDebut()
             && $now < $this->endDate($sortie)) {

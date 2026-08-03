@@ -2,27 +2,9 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block stylesheets %}
-    {{ parent }}
-    <link rel="stylesheet" href="{{ asset('style/home.css') }}">
-{% endblock %}
-
 {% block body %}
 
-
-<section class="home-page">
-
-   <div class="home-container">
-
-    <div class="home-heading">
-
-    <div>
     <h1>Accueil</h1>
-
-    {% if app.user.administrateur %}
-        <a href="#"class="admin-link">Administration</a>
-    {% endif %}
-    </div>
 
     <section class="infos-accueil">
         <p>Date du jour : {{ "now"|date("d/m/Y") }}</p>
@@ -32,16 +14,8 @@
         {% endif %}
     </section>
 
-    </div>
+    <form method="get">
 
-    <section class="filters-container">
-
-        <h2>Filtrer les sorties</h2>
-
-    <form method="get" class="filters-form">
-        <div class="filters-fields">
-
-        <div class="form-group">
         <label for="campus">Campus</label>
         <select id="campus" name="campus">
             <option value="">Tous les campus</option>
@@ -49,68 +23,32 @@
                 <option value="{{ campus.id }}">{{ campus.nom }}</option>
             {% endfor %}
         </select>
-    </div>
-
-    <div class="form-group">
 
         <label for="nom">Le nom de la sortie contient</label>
         <input type="text" id="nom" name="nom">
-    </div>
 
-    <div class="dates-group">
-
-    <div class="form-group">
         <label for="dateDebut">Entre</label>
         <input type="date" id="dateDebut" name="dateDebut">
-    </div>
 
-    <div class="form-group">
         <label for="dateFin">et</label>
         <input type="date" id="dateFin" name="dateFin">
-    </div>
 
-  </div>
-
-</div>
-
-<div class="filters-checkboxes">
-
-    <div class="checkbox-group">
         <input type="checkbox" id="organisateur" name="organisateur">
         <label for="organisateur">Sorties dont je suis l'organisateur/trice</label>
-    </div>
 
-    <div class="checkbox-group">
         <input type="checkbox" id="inscrit" name="inscrit">
         <label for="inscrit">Sorties auxquelles je suis inscrit/e</label>
-    </div>
 
-    <div class="checkbox-group">
         <input type="checkbox" id="nonInscrit" name="nonInscrit">
         <label for="nonInscrit">Sorties auxquelles je ne suis pas inscrit/e</label>
-    </div>
 
-    <div class="checkbox-group">
         <input type="checkbox" id="passees" name="passees">
         <label for="passees">Sorties passées</label>
-    </div>
 
-</div>
-
-    <div class="filters-action">
         <button type="submit">Rechercher</button>
-    </div>
-
-
     </form>
-</section>
 
-<section class="sorties-container">
-
-    <div class="table-wrapper">
-
-    <table class="sorties-table">
-
+    <table>
         <thead>
         <tr>
             <th>Nom de la sortie</th>
@@ -136,7 +74,7 @@
                     {% if app.user in sortie.inscrits %}Oui{% else %}Non{% endif %}
                 </td>
                 <td>
-                    <a href="#">{{ sortie.organisateur.pseudo }}</a>
+                    <a href="{{ path('app_profile', {id: sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
                 </td>
                 <td>
                     <a href="{{ path('app_sortie_show', {id: sortie.id}) }}">Afficher</a>
@@ -149,12 +87,9 @@
         {% endfor %}
         </tbody>
     </table>
-    </div>
-    <a href="{{ path('app_sortie_create') }}" class="create-link">
+
+    <a href="{{ path('app_sortie_create') }}">
         <button type="button">Créer une sortie</button>
     </a>
-</section>
-   </div>
-</section>
 
 {% endblock %}

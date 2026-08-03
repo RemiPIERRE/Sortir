@@ -1,57 +1,70 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Connexion{% endblock %}
-
 {% block body %}
+    <main class="login-page">
 
-<main class="login-page">
+        <section class="login-presentation">
 
+            <div class="login-brand">
+                <img src="{{ asset('images/logo.png') }}" alt="" class="login-logo-img">
+                <span class="login-wordmark"><span class="sortir">sortir</span><span class="com">.com</span></span>
+            </div>
 
+            <div class="login-baseline">
+                <p class="login-campus">Saint-Herblain · Chartres-de-Bretagne · La Roche-sur-Yon</p>
+                <h2 class="login-escalier">
+                    <span class="mot-1">Organisez.</span>
+                    <span class="mot-2">Sortez.</span>
+                    <span class="mot-3">Partagez.</span>
+                </h2>
+            </div>
 
-    <section class="login-presentation">
-        <img src="#" alt="Sortir.com">
-        <h2>
-            <span class="sortir">Sortir</span><span class="com">.com</span>
-        </h2>
+            <ul class="login-stats">
+                <li><strong>{{ nbParticipants }}</strong><span>Stagiaires actifs</span></li>
+                <li><strong>{{ nbSorties }}</strong><span>Sorties organisées</span></li>
+                <li><strong>{{ nbCampus }}</strong><span>Campus connectés</span></li>
+            </ul>
 
-        <p>Organisez et partagez vos sorties entre stagiaires</p>
-    </section>
+        </section>
 
-    <section class="login-container">
+        <section class="login-container">
+            <div class="login-box">
 
-    <h1>Se connecter</h1>
+                <p class="login-label">— Connexion</p>
+                <h1>Heureux de vous revoir</h1>
+                <p class="login-subtitle">Connectez-vous avec votre identifiant ENI pour retrouver vos sorties.</p>
 
-    {% if error %}
-        <div class="flash flash-error">
-            {{ error.messageKey|trans(error.messageData, 'security') }}
-        </div>
-    {% endif %}
+                {% if error %}
+                    <div class="flash flash-error">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
 
-    <form method="post" class="login-form">
-        <label for="username">Identifiant</label>
-        <input type="text" value="{{ last_username }}" name="_username" id="username" autocomplete="username" required
-               autofocus>
+                <form method="post" class="login-form">
+                    <label for="username">Identifiant <span>— pseudo ou email</span></label>
+                    <input type="text" value="{{ last_username }}" name="_username" id="username"
+                           autocomplete="username" required autofocus>
 
-        <label for="password">Mot de passe</label>
-        <input type="password" name="_password" id="password" autocomplete="current-password" required>
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="_password" id="password" autocomplete="current-password" required>
 
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
-               value="{{ csrf_token('authenticate') }}">
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+                           value="{{ csrf_token('authenticate') }}">
 
-        <div class="_remember_me">
-            <input type="checkbox" name="_remember_me" id="_remember_me">
-            <label for="_remember_me">Se souvenir de moi</label>
-        </div>
+                    <div class="login-options">
+                        <div class="_remember_me">
+                            <input type="checkbox" name="_remember_me" id="_remember_me">
+                            <label for="_remember_me">Se souvenir de moi</label>
+                        </div>
+                        {# TODO (I3-T4) : {{ path('app_mot_de_passe_oublie') }} #}
+                        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+                    </div>
 
-        <button type="submit">Se connecter</button>
-    </form>
+                    <button type="submit">Se connecter →</button>
+                </form>
 
-    <div>
-        {# TODO (I3-T4) : {{ path('app_mot_de_passe_oublie') }} #}
-        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
-    </div>
+            </div>
+        </section>
 
-    </section>
-
-</main>
+    </main>
 {% endblock %}
