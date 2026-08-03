@@ -43,8 +43,7 @@ class SortieVoter extends Voter
         if (!$user instanceof Participant) {
             return false;
         }
-
-        /** @var Sortie $sortie */
+        
         $sortie = $subject;
 
         if (self::CANCEL === $attribute && $this->security->isGranted('ROLE_ADMIN')) {
