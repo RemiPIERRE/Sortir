@@ -121,8 +121,6 @@
     margin: 0 0 12px;
 }
 
-
-/* Titre du formulaire */
 .login-container h1 {
     font-family: "Playfair Display", Georgia, serif;
     font-size: 2.4rem;
@@ -136,15 +134,11 @@
     line-height: 1.5;
 }
 
-
-/* Place les éléments du formulaire les uns sous les autres */
 .login-form {
     display: flex;
     flex-direction: column;
 }
 
-
-/* Style des labels */
 .login-form label {
     font-weight: 600;
     color: #17324d;
@@ -157,8 +151,6 @@
     font-weight: 400;
 }
 
-
-/* Style des champs identifiant et mot de passe */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     padding: 13px 15px;
@@ -170,8 +162,6 @@
     color: #17324d;
 }
 
-
-/* Mise en valeur du champ sélectionné */
 .login-form input[type="text"]:focus,
 .login-form input[type="password"]:focus {
     outline: none;
@@ -186,8 +176,6 @@
     margin-bottom: 24px;
 }
 
-
-/* Aligne la case à cocher et son texte */
 ._remember_me {
     display: flex;
     align-items: center;
@@ -211,8 +199,6 @@
     accent-color: #e85d34;
 }
 
-
-/* Lien vers la récupération du mot de passe */
 .forgot-password {
     color: #e85d34;
     font-weight: 600;
@@ -220,8 +206,6 @@
     text-decoration: none;
 }
 
-
-/* Changement de couleur du lien au survol */
 .forgot-password:hover {
     text-decoration: underline;
 }
@@ -264,7 +248,6 @@
 
     }
 
-    /* Réduction de la taille du nom du site */
     .login-presentation h2 {
         font-size: 1.9rem;
     }
