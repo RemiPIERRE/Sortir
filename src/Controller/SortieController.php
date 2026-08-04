@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Entity\Ville;
+use App\Repository\LieuRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/sortie', name: 'app_sortie_')]
 #[IsGranted('ROLE_USER')]
@@ -62,6 +65,30 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('/lieux/{id}', name: 'lieux', methods: ['GET'])]
+    public function lieux(
+        Ville $ville,
+        LieuRepository $lieuRepository,
+    ): JsonResponse
+    {
+    $lieux = $lieuRepository->findBy(
+        ['ville' => $ville],
+        ['nom' => 'ASC']
+    );
+
+    $resultat = [];
+
+    foreach ($lieux as $lieu) {
+        $resultat[] = [
+            'id' => $lieu->getId(),
+            'nom' => $lieu->getNom(),
+        ];
+    }
+
+    return $this->json($resultat);
+
     }
 
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
