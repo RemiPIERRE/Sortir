@@ -86,4 +86,40 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findForApi(
+        ?string $etat,
+        ?\DateTimeImmutable $date
+    ): array {
+        $queryBuilder = $this->createQueryBuilder('s');
+
+        $queryBuilder
+            ->join('s.etat', 'e')
+            ->andWhere('e.libelle NOT IN (:etatsExclus)')
+            ->setParameter('etatsExclus', [
+                'En création',
+                'Terminée',
+            ])
+            ->orderBy('s.dateHeureDebut', 'ASC');
+
+        if ($etat) {
+            $queryBuilder
+                ->andWhere('e.libelle = :etat')
+                ->setParameter('etat', $etat);
+        }
+
+        if ($date) {
+            $dateFin = $date->modify('+1 day');
+
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->andWhere('s.dateHeureDebut < :dateFin')
+                ->setParameter('dateDebut', $date)
+                ->setParameter('dateFin', $dateFin);
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
 }
