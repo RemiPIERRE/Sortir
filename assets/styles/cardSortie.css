@@ -1,0 +1,176 @@
+:root {
+    --bleu-fonce: #1b2a4a;
+    --bleu: #2b4a7a;
+    --orange: #f26b3a;
+    --gris-fond: #f4f2ee;
+    --gris-bord: #e2e0da;
+    --gris-texte: #5a5a5a;
+    --blanc: #ffffff;
+
+    --etat-en-creation: #8a8a8a;
+    --etat-ouverte: #3c8c5c;
+    --etat-cloturee: #e0a52b;
+    --etat-en-cours: #2b6ca8;
+    --etat-terminee: #7a7a7a;
+    --etat-annulee: #b23a3a;
+    --etat-historisee: #9a9a9a;
+}
+
+.liste-sorties {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.card-sortie {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-top: 4px solid var(--bleu);
+}
+
+.card-sortie:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-sortie header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-sortie h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--bleu-fonce);
+}
+
+.badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--blanc);
+    background: var(--gris-texte);
+}
+
+.badge-ouverte {
+    background: var(--etat-ouverte);
+}
+
+.badge-cloturee {
+    background: var(--etat-cloturee);
+}
+
+.badge-en-cours {
+    background: var(--etat-en-cours);
+}
+
+.badge-terminee {
+    background: var(--etat-terminee);
+}
+
+.badge-annulee {
+    background: var(--etat-annulee);
+}
+
+.badge-historisee {
+    background: var(--etat-historisee);
+}
+
+.badge-en-creation {
+    background: var(--etat-en-creation);
+}
+
+.card-date {
+    margin: 0;
+    font-weight: 600;
+    color: var(--bleu-fonce);
+}
+
+.card-lieu {
+    margin: 0;
+    color: var(--gris-texte);
+    font-size: 0.9rem;
+}
+
+.card-sortie footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed var(--gris-bord);
+    padding-top: 0.6rem;
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+}
+
+.card-orga a {
+    color: var(--bleu);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-orga a:hover {
+    text-decoration: underline;
+}
+
+.card-places {
+    color: var(--gris-texte);
+    font-weight: 600;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.4rem;
+}
+
+.tag-orga,
+.tag-inscrit {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+}
+
+.tag-orga {
+    color: var(--orange);
+}
+
+.tag-inscrit {
+    color: var(--etat-ouverte);
+}
+
+.card-actions a {
+    color: var(--blanc);
+    background: var(--bleu-fonce);
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.card-actions a:hover {
+    background: var(--bleu);
+}
+
+.liste-sorties > p {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--gris-texte);
+    padding: 2rem;
+}
