@@ -1,0 +1,661 @@
+/* ============================================================
+   Pages Sorties (détail / annulation / création-édition)
+   Réutilise :root, .admin-container, .admin-back, .admin-header,
+   .btn-corail / .form-card (voir admin.css & users.css).
+   ============================================================ */
+
+/* ---------- Bandeau (hero) ---------- */
+
+.sortie-hero {
+    position: relative;
+    padding: 2rem 2.2rem;
+    border-radius: 18px;
+    color: var(--blanc);
+    background: radial-gradient(circle at 90% 15%, rgba(232, 93, 52, 0.25), transparent 45%),
+    linear-gradient(135deg, var(--navy-fonce), var(--bleu));
+    margin-bottom: 1.5rem;
+}
+
+.sortie-hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.sortie-hero h1 {
+    margin: 0.3rem 0 1.5rem;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 2.4rem;
+}
+
+/* Badge d'état (sur fond sombre) */
+.etat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.etat-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.etat--en-creation {
+    color: #c7c7c7;
+}
+
+.etat--ouverte {
+    color: #7fd6a0;
+}
+
+.etat--cloturee {
+    color: #f0c060;
+}
+
+.etat--en-cours {
+    color: #7fb4e6;
+}
+
+.etat--terminee {
+    color: #b8b8b8;
+}
+
+.etat--annulee {
+    color: #f0a0a0;
+}
+
+.etat--historisee {
+    color: #b0b0b0;
+}
+
+/* Bouton "Annuler la sortie" dans le hero */
+.btn-hero-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 10px;
+    background: rgba(224, 122, 122, 0.18);
+    border: 1px solid rgba(224, 122, 122, 0.35);
+    color: #f3b4b4;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-hero-danger:hover {
+    background: rgba(224, 122, 122, 0.28);
+    color: #ffd0d0;
+    text-decoration: none;
+}
+
+.btn-hero-danger svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Tuiles d'infos dans le hero */
+.sortie-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.hero-stat {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+}
+
+.hero-stat-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.hero-stat-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.hero-stat-value svg {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    flex-shrink: 0;
+}
+
+/* ---------- Timeline des états ---------- */
+
+.timeline-card {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 18px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+}
+
+.timeline {
+    display: flex;
+    min-width: 640px;
+}
+
+.timeline-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.timeline-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--gris-bord);
+    z-index: 0;
+}
+
+.timeline-step.done::after {
+    background: var(--etat-ouverte);
+}
+
+.timeline-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--gris-bord);
+    background: var(--blanc);
+    z-index: 1;
+}
+
+.timeline-step.done .timeline-dot {
+    border-color: var(--etat-ouverte);
+    background: var(--etat-ouverte);
+}
+
+.timeline-step.current .timeline-dot {
+    border-color: var(--corail);
+    background: var(--corail);
+    box-shadow: 0 0 0 4px rgba(232, 93, 52, 0.15);
+}
+
+.timeline-label {
+    margin-top: 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gris-texte);
+    text-align: center;
+}
+
+.timeline-step.done .timeline-label,
+.timeline-step.current .timeline-label {
+    color: var(--navy);
+}
+
+/* ---------- Grille contenu ---------- */
+
+.sortie-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.sortie-card {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 18px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+}
+
+.sortie-card h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1.2rem;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.4rem;
+    color: var(--navy);
+}
+
+.sortie-card h2 svg {
+    width: 20px;
+    height: 20px;
+    color: var(--corail);
+    flex-shrink: 0;
+}
+
+.sortie-card h2 .count {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gris-texte);
+}
+
+.sortie-card p {
+    margin: 0;
+    color: var(--gris-texte);
+    line-height: 1.6;
+}
+
+/* Lieu + emplacement carte (vide pour l'instant) */
+.lieu-nom {
+    margin: 0 0 0.2rem;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.lieu-adresse {
+    margin: 0 0 1rem;
+    color: var(--gris-texte);
+}
+
+.map-placeholder {
+    height: 220px;
+    border-radius: 12px;
+    border: 1px dashed var(--gris-bord);
+    background: var(--gris-fond);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gris-bord);
+}
+
+.map-placeholder svg {
+    width: 34px;
+    height: 34px;
+}
+
+.map-coords {
+    margin: 0.7rem 0 0;
+    font-family: "Maven Pro", monospace;
+    font-size: 0.8rem;
+    color: var(--gris-texte);
+}
+
+/* Organisateur */
+.organisateur-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.organisateur-row:hover .organisateur-arrow {
+    color: var(--corail);
+    transform: translateX(3px);
+}
+
+.avatar-round {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--bleu);
+    color: var(--blanc);
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.avatar-round img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.organisateur-info {
+    flex: 1;
+}
+
+.organisateur-name {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.organisateur-pseudo {
+    font-size: 0.85rem;
+    color: var(--gris-texte);
+}
+
+.organisateur-arrow {
+    color: var(--gris-texte);
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* Participants inscrits */
+.inscrit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.6rem;
+    margin: 0 -0.6rem;
+    border-radius: 10px;
+    border-bottom: 1px solid var(--gris-bord);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease;
+}
+
+.inscrit-row:last-child {
+    border-bottom: none;
+}
+
+.inscrit-row:hover {
+    background: var(--gris-fond);
+    text-decoration: none;
+}
+
+.inscrit-arrow {
+    color: var(--gris-bord);
+    flex-shrink: 0;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.inscrit-row:hover .inscrit-arrow {
+    color: var(--corail);
+    transform: translateX(3px);
+}
+
+.inscrit-info {
+    flex: 1;
+}
+
+.inscrit-name {
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.inscrit-pseudo {
+    font-size: 0.82rem;
+    color: var(--gris-texte);
+}
+
+.badge-vous {
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(60, 140, 92, 0.14);
+    color: var(--etat-ouverte);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.inscrits-empty {
+    color: var(--gris-texte);
+}
+
+/* Actions d'inscription (participant) */
+.sortie-actions {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.sortie-actions .inline-form {
+    margin: 0;
+}
+
+.btn-inscrire,
+.btn-desister {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s ease;
+}
+
+.btn-inscrire {
+    background: var(--corail);
+    color: var(--blanc);
+    box-shadow: 0 2px 8px rgba(232, 93, 52, 0.35);
+}
+
+.btn-inscrire:hover:not(:disabled) {
+    background: var(--corail-fonce);
+}
+
+.btn-desister {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--blanc);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-desister:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-inscrire:disabled,
+.btn-desister:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ---------- Page d'annulation ---------- */
+
+.cancel-summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1.1rem 1.3rem;
+    background: var(--gris-fond);
+    border: 1px solid var(--gris-bord);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.cancel-summary svg {
+    width: 22px;
+    height: 22px;
+    color: var(--corail);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.cancel-summary-title {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.cancel-summary-meta {
+    font-size: 0.9rem;
+    color: var(--gris-texte);
+    margin-top: 0.15rem;
+}
+
+.field-label {
+    display: block;
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.field-help {
+    margin: 0.4rem 0 0;
+    font-size: 0.82rem;
+    color: var(--gris-texte);
+}
+
+.cancel-form textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--gris-bord);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--navy);
+    background: var(--gris-fond);
+    min-height: 130px;
+    resize: vertical;
+}
+
+.cancel-form textarea:focus {
+    outline: 2px solid var(--corail);
+    outline-offset: 1px;
+    background: var(--blanc);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-ghost:hover {
+    border-color: var(--navy);
+    background: var(--gris-fond);
+    text-decoration: none;
+}
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    background: rgba(178, 58, 58, 0.1);
+    border: 1px solid rgba(178, 58, 58, 0.3);
+    color: var(--etat-annulee);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-danger:hover {
+    background: rgba(178, 58, 58, 0.18);
+}
+
+.btn-danger svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ---------- Création / édition : pastille "v2" ---------- */
+
+.ghost-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    color: var(--navy);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+    .sortie-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Création / édition : layout du formulaire ---------- */
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+/* les lignes internes ne cumulent pas la marge : on s'appuie sur le gap */
+.form-grid-2 > div {
+    margin-bottom: 0;
+}
+
+.form-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.7rem 0 1.2rem;
+    color: var(--gris-texte);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.form-divider::before,
+.form-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--gris-bord);
+}
+
+@media (max-width: 640px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* utilitaire : masquer un champ tant que le JS ne le révèle pas */
+.js-hidden {
+    display: none;
+}

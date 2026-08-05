@@ -1,0 +1,288 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ sortie.nom }}{% endblock %}
+
+{% block body %}
+    {% set libelle = sortie.etat ? sortie.etat.libelle : '' %}
+
+    {% set etatSlug = libelle|lower
+        |replace({'é':'e','è':'e','ê':'e','à':'a','ô':'o',' ':'-','\'':''}) %}
+
+    {% set estOrganisateur = app.user and sortie.organisateur and app.user.id == sortie.organisateur.id %}
+
+    {% set etapes = ['Création', 'Ouverte', 'Clôturée', 'En cours', 'Terminée', 'Historisée'] %}
+    {% set normLibelle = libelle|lower|replace({'é':'e','è':'e','ê':'e','à':'a','ô':'o'}) %}
+    {% set etatIndex = {
+        'creation': 0, 'creee': 0, 'en creation': 0,
+        'ouverte': 1,
+        'cloturee': 2,
+        'en cours': 3, 'activite en cours': 3,
+        'terminee': 4, 'passee': 4,
+        'historisee': 5
+    } %}
+    {% set indexCourant = etatIndex[normLibelle] is defined ? etatIndex[normLibelle] : -1 %}
+
+    <div class="admin-page">
+        <div class="admin-container">
+
+            <a href="{{ path('app_home') }}" class="admin-back">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Retour à la liste des sorties
+            </a>
+
+            <div class="sortie-hero">
+                <div class="sortie-hero-top">
+                    <span class="etat-badge etat--{{ etatSlug }}">{{ libelle }}</span>
+
+                    {% if estOrganisateur and libelle not in ['Annulée', 'Terminée', 'Historisée'] %}
+                        <a href="{{ path('app_sortie_cancel', {id: sortie.id}) }}" class="btn-hero-danger">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                            </svg>
+                            Annuler la sortie
+                        </a>
+                    {% endif %}
+                </div>
+
+                <h1>{{ sortie.nom }}</h1>
+
+                <div class="sortie-hero-stats">
+                    <div class="hero-stat">
+                        <p class="hero-stat-label">Date &amp; heure</p>
+                        <div class="hero-stat-value">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y à H:i') : '—' }}
+                        </div>
+                    </div>
+
+                    <div class="hero-stat">
+                        <p class="hero-stat-label">Durée</p>
+                        <div class="hero-stat-value">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            {{ sortie.duree }} min
+                        </div>
+                    </div>
+
+                    <div class="hero-stat">
+                        <p class="hero-stat-label">Clôture inscriptions</p>
+                        <div class="hero-stat-value">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            {{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '—' }}
+                        </div>
+                    </div>
+
+                    <div class="hero-stat">
+                        <p class="hero-stat-label">Places</p>
+                        <div class="hero-stat-value">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            {{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}
+                        </div>
+                    </div>
+                </div>
+
+                {% if not estOrganisateur %}
+                    {% if (peut_inscrire is defined and peut_inscrire and not deja_inscrit) or (peut_desister is defined and peut_desister) %}
+                        <div class="sortie-actions" style="margin-top:1.3rem">
+                            {% if peut_inscrire is defined %}
+                                <form method="post" class="inline-form"
+                                      action="{{ path('app_sortie_register', {id: sortie.id}) }}">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('inscription' ~ sortie.id) }}">
+                                    <button type="submit" class="btn-inscrire"
+                                            {% if not peut_inscrire or deja_inscrit %}disabled{% endif %}>S'inscrire
+                                    </button>
+                                </form>
+                            {% endif %}
+                            {% if peut_desister is defined %}
+                                <form method="post" class="inline-form"
+                                      action="{{ path('app_sortie_withdraw', {id: sortie.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('desister' ~ sortie.id) }}">
+                                    <button type="submit" class="btn-desister"
+                                            {% if not peut_desister %}disabled{% endif %}>Se désister
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="timeline-card">
+                <div class="timeline">
+                    {% for etape in etapes %}
+                        {% set cls = '' %}
+                        {% if indexCourant >= 0 %}
+                            {% if loop.index0 < indexCourant %}{% set cls = 'done' %}
+                            {% elseif loop.index0 == indexCourant %}{% set cls = 'current' %}{% endif %}
+                        {% endif %}
+                        <div class="timeline-step {{ cls }}">
+                            <span class="timeline-dot"></span>
+                            <span class="timeline-label">{{ etape }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sortie-grid">
+
+                <div>
+                    <div class="sortie-card">
+                        <h2>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            Description et informations
+                        </h2>
+                        <p>{{ sortie.infoSortie ?: 'Aucune description fournie.' }}</p>
+
+                        {% if libelle == 'Annulée' and sortie.motifAnnulation %}
+                            <p style="margin-top:1rem;color:var(--etat-annulee)">
+                                <strong>Motif d'annulation :</strong> {{ sortie.motifAnnulation }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="sortie-card">
+                        <h2>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Lieu de la sortie
+                        </h2>
+
+                        {% if sortie.lieu %}
+                            <p class="lieu-nom">{{ sortie.lieu.nom }}</p>
+                            <p class="lieu-adresse">
+                                {{ sortie.lieu.rue is defined ? sortie.lieu.rue ~ ', ' : '' }}
+                                {{ sortie.lieu.ville ? sortie.lieu.ville.codePostal ~ ' ' ~ sortie.lieu.ville.nom : '' }}
+                            </p>
+                        {% else %}
+                            <p class="lieu-adresse">Lieu non renseigné.</p>
+                        {% endif %}
+
+                        <div class="map-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+
+                        {% if sortie.lieu and sortie.lieu.latitude is defined and sortie.lieu.latitude %}
+                            <p class="map-coords">lat {{ sortie.lieu.latitude }} · lng {{ sortie.lieu.longitude }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="sortie-card">
+                        <h2>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                            Organisateur
+                        </h2>
+
+                        {% if sortie.organisateur %}
+                            {% set orga = sortie.organisateur %}
+                            {% set orgaInit = ((orga.prenom|default('')|first) ~ (orga.nom|default('')|first))|upper %}
+                            <a href="{{ path('app_profile', {id: orga.id}) }}" class="organisateur-row">
+                                <span class="avatar-round">
+                                    {% if orga.photo %}<img src="{{ asset('images/photos/' ~ orga.photo) }}" alt="">
+                                    {% else %}{{ orgaInit ?: orga.email|first|upper }}{% endif %}
+                                </span>
+                                <span class="organisateur-info">
+                                    <span
+                                        class="organisateur-name">{{ (orga.prenom ~ ' ' ~ orga.nom)|trim ?: orga.pseudo }}</span><br>
+                                    <span class="organisateur-pseudo">{{ orga.pseudo }}</span>
+                                </span>
+                                <svg class="organisateur-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="sortie-card">
+                        <h2>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            Participants inscrits <span class="count">({{ sortie.inscrits|length }})</span>
+                        </h2>
+
+                        {% if sortie.inscrits is empty %}
+                            <p class="inscrits-empty">Aucun participant inscrit pour le moment.</p>
+                        {% else %}
+                            {% for inscrit in sortie.inscrits %}
+                                {% set init = ((inscrit.prenom|default('')|first) ~ (inscrit.nom|default('')|first))|upper %}
+                                <a href="{{ path('app_profile', {id: inscrit.id}) }}" class="inscrit-row">
+                                    <span class="avatar-round" style="width:40px;height:40px">
+                                        {% if inscrit.photo %}<img src="{{ asset('images/photos/' ~ inscrit.photo) }}"
+                                                                   alt="">
+                                        {% else %}{{ init ?: inscrit.email|first|upper }}{% endif %}
+                                    </span>
+                                    <span class="inscrit-info">
+                                        <span
+                                            class="inscrit-name">{{ (inscrit.prenom ~ ' ' ~ inscrit.nom)|trim ?: inscrit.pseudo }}</span><br>
+                                        <span class="inscrit-pseudo">{{ inscrit.pseudo }}</span>
+                                    </span>
+                                    {% if app.user and inscrit.id == app.user.id %}
+                                        <span class="badge-vous">Vous</span>
+                                    {% endif %}
+                                    <svg class="inscrit-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none"
+                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                    </svg>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

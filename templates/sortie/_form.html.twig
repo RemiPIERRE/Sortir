@@ -1,0 +1,46 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.nom) }}
+
+<div class="form-grid-2">
+    {{ form_row(form.dateHeureDebut) }}
+    {{ form_row(form.dateLimiteInscription) }}
+</div>
+
+<div class="form-grid-2">
+    {{ form_row(form.nbInscriptionMax) }}
+    {{ form_row(form.duree) }}
+</div>
+
+{{ form_row(form.infoSortie) }}
+
+<div class="form-divider">Lieu de la sortie</div>
+
+<div class="form-grid-2">
+    {{ form_row(form.ville) }}
+    <div id="cp-nouvelle-ville" class="js-hidden">
+        {{ form_row(form.codePostal) }}
+    </div>
+
+    {{ form_row(form.lieu) }}
+
+    <div id="nouveau-lieu-fields" class="js-hidden">
+        {{ form_row(form.nouveauLieuRue) }}
+        <div class="form-grid-2">
+            {{ form_row(form.latitude) }}
+            {{ form_row(form.longitude) }}
+        </div>
+    </div>
+
+    {{ form_row(form.nouvelleVille) }}
+    {{ form_row(form.nouveauLieu) }}
+</div>
+
+{{ form_row(form.campus) }}
+
+<div class="form-actions">
+    {{ form_widget(form.enregistrer, { attr: { class: 'btn-ghost' } }) }}
+    {{ form_widget(form.publier, { attr: { class: 'btn-corail' } }) }}
+</div>
+
+{{ form_end(form) }}

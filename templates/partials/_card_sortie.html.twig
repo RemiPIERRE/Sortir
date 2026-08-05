@@ -4,6 +4,10 @@
 {% set estComplet = nbInscrits >= sortie.nbInscriptionMax %}
 {% set placesRatio = sortie.nbInscriptionMax > 0 ? (nbInscrits / sortie.nbInscriptionMax * 100)|round : 0 %}
 
+{% set etatLibelle = sortie.etat ? sortie.etat.libelle : '' %}
+{% set etatSlug = etatLibelle|lower|replace({' ': '-', 'é': 'e', 'è': 'e', 'û': 'u', 'ô': 'o'}) %}
+{% set inscriptionOuverte = etatSlug == 'ouverte' %}
+
 <article class="card-sortie">
 
     <div class="card-body">
@@ -12,8 +16,7 @@
             <h3>{{ sortie.nom }}</h3>
 
             {% if sortie.etat %}
-                {% set etatSlug = sortie.etat.libelle|lower|replace({' ': '-', 'é': 'e', 'è': 'e', 'û': 'u', 'ô': 'o'}) %}
-                <span class="badge badge-{{ etatSlug }}">{{ sortie.etat.libelle }}</span>
+                <span class="badge badge-{{ etatSlug }}">{{ etatLibelle }}</span>
             {% endif %}
         </header>
 
@@ -60,10 +63,10 @@
                 Vous organisez
             {% elseif estInscrit %}
                 Inscrit·e
-            {% elseif estComplet %}
-                Complet
+            {% elseif inscriptionOuverte %}
+                {% if estComplet %}Complet{% else %}S'inscrire{% endif %}
             {% else %}
-                S'inscrire
+                Voir infos
             {% endif %}
         </span>
 

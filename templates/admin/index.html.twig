@@ -3,31 +3,93 @@
 {% block title %}Administration{% endblock %}
 
 {% block body %}
+    <div class="admin-page">
+        <div class="admin-container">
 
-    <h1>Espace d'administration</h1>
+            <header class="admin-header">
+                <p class="admin-label">Espace réservé</p>
+                <h1>Administration</h1>
+                <p class="admin-subtitle">Gérez les utilisateurs, les villes et les campus de la plateforme.</p>
+            </header>
 
-    <p>Bienvenue {{ app.user.prenom }}. Gérez ici les données de la plateforme.</p>
+            <section class="admin-stats">
+                <div class="stat-card">
+                    <p class="stat-label">Sorties totales</p>
+                    <div class="stat-value">{{ sortiesTotales|default('—') }}</div>
+                </div>
 
-    <section class="admin-tiles">
-        <ul>
-            <li>
-                <a href="{{ path('app_admin_users') }}">Gestion des utilisateurs</a>
-                <p>Lister, modifier, désactiver, inscrire ou importer des utilisateurs.</p>
-            </li>
-            <li>
-                {# <a href="{{ path('app_admin_villes') }}">Gestion des villes</a> #}
-                <a href="#">Gestion des villes</a>
-                <p>Ajouter, modifier ou supprimer les villes.</p>
-            </li>
-            <li>
-                <a href="{{ path('app_admin_campus') }}">Gestion des campus</a>
-                <p>Ajouter, modifier ou supprimer les campus.</p>
-            </li>
-        </ul>
-    </section>
+                <div class="stat-card">
+                    <p class="stat-label">Sorties actives</p>
+                    <div class="stat-value">
+                        {{ sortiesActives|default('—') }}
+                        <span class="stat-dot"></span>
+                    </div>
+                </div>
 
-    <p>
-        <a href="{{ path('app_home') }}">Retour à l'accueil</a>
-    </p>
+                <div class="stat-card">
+                    <p class="stat-label">Utilisateurs</p>
+                    <div class="stat-value">{{ nbUtilisateurs|default('—') }}</div>
+                </div>
 
+                <div class="stat-card">
+                    <p class="stat-label">Comptes inactifs</p>
+                    <div class="stat-value stat-value--danger">{{ comptesInactifs|default('—') }}</div>
+                </div>
+            </section>
+
+            <section class="admin-tiles">
+
+                <a href="{{ path('app_admin_users') }}" class="tile-card">
+                    <span class="tile-icon tile-icon--users">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </span>
+                    <h2 class="tile-title">Gérer les utilisateurs</h2>
+                    <p class="tile-desc">Lister, modifier, désactiver, inscrire manuellement ou importer des
+                        utilisateurs via CSV.</p>
+                    <div class="tile-count">{{ nbUtilisateurs|default('—') }}</div>
+                </a>
+
+                <a href="{{ path('app_admin_villes') }}" class="tile-card">
+                    <span class="tile-icon tile-icon--villes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                            <line x1="8" y1="2" x2="8" y2="18"/>
+                            <line x1="16" y1="6" x2="16" y2="22"/>
+                        </svg>
+                    </span>
+                    <h2 class="tile-title">Gérer les villes</h2>
+                    <p class="tile-desc">Ajouter, modifier ou supprimer les villes utilisables pour les lieux de
+                        sortie.</p>
+                    <div class="tile-count">{{ nbVilles|default('—') }}</div>
+                </a>
+
+                <a href="{{ path('app_admin_campus') }}" class="tile-card">
+                    <span class="tile-icon tile-icon--campus">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18"/>
+                            <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/>
+                            <line x1="9" y1="7" x2="9" y2="7.01"/>
+                            <line x1="15" y1="7" x2="15" y2="7.01"/>
+                            <line x1="9" y1="11" x2="9" y2="11.01"/>
+                            <line x1="15" y1="11" x2="15" y2="11.01"/>
+                            <line x1="9" y1="15" x2="9" y2="15.01"/>
+                            <line x1="15" y1="15" x2="15" y2="15.01"/>
+                        </svg>
+                    </span>
+                    <h2 class="tile-title">Gérer les campus</h2>
+                    <p class="tile-desc">Ajouter, modifier ou supprimer les campus de rattachement des participants.</p>
+                    <div class="tile-count">{{ nbCampus|default('—') }}</div>
+                </a>
+
+            </section>
+        </div>
+    </div>
 {% endblock %}
