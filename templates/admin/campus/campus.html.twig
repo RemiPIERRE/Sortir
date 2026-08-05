@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Gérer les campus
+{% endblock %}
+
+{% block body %}
+
+    <h1>Gérer les Campus</h1>
+
+    <form method="get" action="{{ path('app_admin_campus') }}">
+        <label for="nom">
+            Le nom contient:
+            <input type="text" name="nom" placeholder="Search">
+        </label>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% for campus in campusList %}
+
+        <p> {{ campus.nom }}</p>
+        <a href="{{ path('app_admin_campus_edit', {id:campus.id}) }}">Modifier</a>
+
+        <form method="POST" action="{{ path ('app_admin_campus_delete', {id:campus.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ campus.id) }}">
+            <button type="submit">Supprimer</button>
+        </form>
+
+    {% endfor %}
+
+    <h2>Ajouter un campus</h2>
+
+    {{ form(form) }}
+
+{% endblock %}

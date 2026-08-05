@@ -8,6 +8,7 @@ use App\Form\ProfileType;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Flow\FormFlowInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -19,7 +20,7 @@ final class ParticipantController extends AbstractController
 {
     #[Route('/profile/create-account', name: 'app_profile_create_account')]
     #[IsGranted('ROLE_USER')]
-    public function createAccount(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function createAccount(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, SluggerInterface $slugger): Response
     {
         /** @var Participant $participant */
         $participant = $this->getUser();
@@ -31,7 +32,7 @@ final class ParticipantController extends AbstractController
             $plainPassword = $form->get('password')->getData();
             $participant->setPassword($passwordHasher->hashPassword($participant, $plainPassword));
 
-            $em->flush();
+            $this->uploadPhoto($form, $slugger, $participant, $em); // factorisation de l'upload de la photo
 
             $this->addFlash('success', 'Profil complété avec succès.');
 
@@ -103,23 +104,7 @@ final class ParticipantController extends AbstractController
                 $participant->setPhoto(null);
             }
 
-
-            $photoFile = $form->get('photoFile')->getData();
-
-            if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
-
-                $photoFile->move(
-                    $this->getParameter('photos_directory'),
-                    $newFilename
-                );
-
-                $participant->setPhoto($newFilename);
-            }
-
-            $em->flush();
+            $this->uploadPhoto($form, $slugger, $participant, $em); // factorisation de l'upload de la photo
 
             $this->addFlash('success', 'Profil modifié avec succès.');
 
@@ -132,5 +117,31 @@ final class ParticipantController extends AbstractController
 
     }
 
+    /**
+     * @param \Symfony\Component\Form\FormInterface|FormFlowInterface $form
+     * @param SluggerInterface $slugger
+     * @param Participant $participant
+     * @param EntityManagerInterface $em
+     * @return void
+     */
+    private function uploadPhoto(\Symfony\Component\Form\FormInterface|FormFlowInterface $form, SluggerInterface $slugger, Participant $participant, EntityManagerInterface $em): void
+    {
+        $photoFile = $form->get('photoFile')->getData();
+
+        if ($photoFile) {
+            $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+
+            $photoFile->move(
+                $this->getParameter('photos_directory'),
+                $newFilename
+            );
+
+            $participant->setPhoto($newFilename);
+        }
+
+        $em->flush();
+    }
 
 }

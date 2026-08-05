@@ -56,8 +56,8 @@
                             <input type="checkbox" name="_remember_me" id="_remember_me">
                             <label for="_remember_me">Se souvenir de moi</label>
                         </div>
-                        {# TODO (I3-T4) : {{ path('app_mot_de_passe_oublie') }} #}
-                        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+                        {# Gestion de l'oubli de mot de passe avec le bundle reset-password #}
+                        <a href="{{ path('app_forgot_password_request') }}" class="forgot-password">Mot de passe oublié ?</a>
                     </div>
 
                     <button type="submit">Se connecter →</button>

@@ -1,21 +1,17 @@
 {% extends 'base.html.twig' %}
-{% block title %}
-    Modifier mon profil
-{% endblock %}
+
+{% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
 
-    <h1>Modifier votre profil</h1>
+    <div class="profile-page">
 
-    {{ form_start(form) }}
-    {{ form_end(form) }}
+        <a href="{{ path('app_profile', {id: app.user.id}) }}" class="profile-back">← Retour à mon profil</a>
 
         <section class="profile-card">
             <h2>Modifier mon profil</h2>
 
             {{ form(form) }}
         </section>
-
-    </div>
 
 {% endblock %}

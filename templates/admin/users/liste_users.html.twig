@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des utilisateurs</h1>
+
+    <a href="{{ path ('app_admin_add_user') }}">Ajouter un utilisateur</a>
+
+    <form method="get" action="{{ path('app_admin_users') }}">
+        <label for="recherche">
+            Cherchez un participant:
+            <input type="text" name="recherche" placeholder="Search">
+        </label>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% for participant in participants %}
+
+        {% if not participant.nom and not participant.prenom %}
+            <p>{{ participant.email }}</p>
+        {% else %}
+            <p> {{ participant.nom }} {{ participant.prenom }}</p>
+        {% endif %}
+        <a href="{{ path ('app_admin_user_edit', {id: participant.id}) }}">Modifier</a>
+
+    {% endfor %}
+
+{% endblock %}
