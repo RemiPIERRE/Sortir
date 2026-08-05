@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\SortieType;
+use App\Repository\LieuRepository;
 use App\Security\Voter\SortieVoter;
 use App\Service\EtatSortieManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,7 +30,7 @@ class SortieController extends AbstractController
         $user = $this->getUser();
         $dejaInscrit = $sortie->getInscrits()->contains($user);
 
-        return $this->render('sortie/afficherSortie.html.twig', [
+        return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
             'peut_inscrire' => $stateManager->canRegister($sortie) && !$dejaInscrit,
             'peut_desister' => $stateManager->canWithdraw($sortie) && $dejaInscrit,
@@ -51,17 +55,56 @@ class SortieController extends AbstractController
             $publish = $form->has('publier') && $form->get('publier')->isClicked();
             $stateManager->initialize($sortie, $publish);
 
+            $ville = $form->get('ville')->getData();
+            if (!$ville) {
+                $nomVille = trim((string)$form->get('nouvelleVille')->getData());
+                $cp = trim((string)$form->get('codePostal')->getData());
+
+                if ($nomVille !== '') {
+                    if ($cp === '') {
+                        $this->addFlash('error', 'Merci d’indiquer le code postal de la nouvelle ville.');
+                        return $this->render('sortie/create.html.twig', ['form' => $form]);
+                    }
+                    $ville = new Ville();
+                    $ville->setNom($nomVille);
+                    $ville->setCodePostal($cp);
+                    $em->persist($ville);
+                }
+            }
+
+            $lieu = $sortie->getLieu();
+            if (!$lieu) {
+                $nomLieu = trim((string)$form->get('nouveauLieu')->getData());
+
+                if ($nomLieu !== '') {
+                    if (!$ville) {
+                        $this->addFlash('error', 'Choisissez ou créez d’abord une ville pour rattacher le lieu.');
+                        return $this->render('sortie/create.html.twig', ['form' => $form]);
+                    }
+                    $lieu = new Lieu();
+                    $lieu->setNom($nomLieu);
+                    $lieu->setVille($ville);
+                    $lieu->setRue(trim((string)$form->get('nouveauLieuRue')->getData()));
+                    $lieu->setLatitude((float)$form->get('latitude')->getData());
+                    $lieu->setLongitude((float)$form->get('longitude')->getData());
+                    $em->persist($lieu);
+                    $sortie->setLieu($lieu);
+                }
+            }
+
+            if (!$sortie->getLieu()) {
+                $this->addFlash('error', 'Veuillez choisir ou créer un lieu pour la sortie.');
+                return $this->render('sortie/create.html.twig', ['form' => $form]);
+            }
+
             $em->persist($sortie);
             $em->flush();
 
             $this->addFlash('success', $publish ? 'Sortie créée et publiée.' : 'Sortie enregistrée.');
-
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('sortie/create.html.twig', [
-            'form' => $form,
-        ]);
+        return $this->render('sortie/create.html.twig', ['form' => $form]);
     }
 
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
@@ -248,6 +291,24 @@ class SortieController extends AbstractController
         $this->addFlash('success', 'Désistement confirmé.');
 
         return $this->redirectToRoute('app_home');
+    }
 
+    #[Route('/lieux/{id}', name: 'app_lieux_by_ville')]
+    public function lieux(Ville $ville, LieuRepository $lieuRepository): JsonResponse
+    {
+        $lieux = $lieuRepository->findBy([
+            'ville' => $ville,
+        ]);
+
+        $result = [];
+
+        foreach ($lieux as $lieu) {
+            $result[] = [
+                'id' => $lieu->getId(),
+                'nom' => $lieu->getNom(),
+            ];
+        }
+
+        return $this->json($result);
     }
 }

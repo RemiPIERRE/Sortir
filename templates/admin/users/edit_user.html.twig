@@ -1,17 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-Modifier un utilisateur
-{% endblock %}
+{% block title %}Modifier un utilisateur{% endblock %}
 
 {% block body %}
+    {% set participant = participant is defined ? participant : form.vars.data %}
+    {% set fullname = (participant.prenom ~ ' ' ~ participant.nom)|trim %}
+    {% set initiales = ((participant.prenom|default('')|first) ~ (participant.nom|default('')|first))|upper %}
+    {% if initiales is empty %}
+        {% set initiales = participant.email|first|upper %}
+    {% endif %}
 
-    <h1>Modifier un utilisateur</h1>
+    <div class="profile-page">
 
-    {{ form(form) }}
+        <a href="{{ path('app_admin_users') }}" class="profile-back">← Retour à la liste des utilisateurs</a>
 
-    <a href="{{ path('app_admin_users') }}">Retour</a>
+        <div class="profile-hero">
+            <div class="profile-avatar">
+                {% if participant.photo %}
+                    <img src="{{ asset('images/photos/' ~ participant.photo) }}" alt="">
+                {% else %}
+                    {{ initiales }}
+                {% endif %}
+            </div>
+            <div class="profile-hero-info">
+                <h1>{{ fullname ?: participant.email }}</h1>
+                <p class="profile-meta">
+                    {{ participant.email }}{% if participant.campus %} · {{ participant.campus.nom }}{% endif %}
+                </p>
+                <span class="profile-badge">{{ participant.administrateur ? 'Administrateur' : 'Participant' }}</span>
+            </div>
+        </div>
 
+        <div class="profile-card">
+            <h2>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Modifier les informations
+            </h2>
+
+            {{ form(form) }}
+        </div>
+
+    </div>
 {% endblock %}
-
-

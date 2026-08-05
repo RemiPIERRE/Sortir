@@ -27,4 +27,13 @@ return [
     '@hotwired/stimulus' => ['version' => '3.2.2'],
     '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
     '@hotwired/turbo' => ['version' => '8.0.23'],
+    'tom-select' => [
+        'path' => './assets/tom-select.index.js'
+    ],
+    '@orchidjs/sifter' => ['version' => '1.1.0'],
+    '@orchidjs/unicode-variants' => ['version' => '1.1.2'],
+    'styles/tom-select.css' => [
+        'path' => './assets/styles/tom-select.css',
+        'type' => 'css'
+    ],
 ];

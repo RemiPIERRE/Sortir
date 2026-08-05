@@ -24,13 +24,15 @@ class SortieRepository extends ServiceEntityRepository
         bool        $inscrit,
         bool        $nonInscrit,
         bool        $passees,
+        bool        $ouvertes,
         Participant $participant
-    ): array {
+    ): array
+    {
         $queryBuilder = $this->createQueryBuilder('s');
 
         $queryBuilder
-            ->join('s.etat', 'e')
-            ->andWhere('e.libelle != :etatCreation')
+            ->join('s.etat', 'ec')
+            ->andWhere('ec.libelle != :etatCreation')
             ->setParameter('etatCreation', 'En création');
 
         if ($campus) {
@@ -80,6 +82,12 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('s.dateHeureDebut < :maintenant')
                 ->setParameter('maintenant', new \DateTimeImmutable());
+        }
+
+        if ($ouvertes) {
+            $queryBuilder
+                ->andWhere('ec.libelle = :ouverte')
+                ->setParameter('ouverte', 'Ouverte');
         }
 
         return $queryBuilder
