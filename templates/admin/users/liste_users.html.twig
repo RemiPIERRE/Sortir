@@ -25,6 +25,13 @@
         {% endif %}
         <a href="{{ path ('app_admin_user_edit', {id: participant.id}) }}">Modifier</a>
 
+        <form method="post" action="{{ path('app_admin_user_delete', {id: participant.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
+            <button type="submit">Supprimer</button>
+        </form>
+
     {% endfor %}
+
+    <a href="{{ path('app_admin_home') }}">Retour</a>
 
 {% endblock %}

@@ -5,8 +5,11 @@ Ajouter un utilisateur
 {% endblock %}
 
 {% block body %}
+
 <h1>Ajouter un utilisateur</h1>
     {{ form(form) }}
+
+    <a href="{{ path('app_admin_users') }}">Retour</a>
 {% endblock %}
 
 

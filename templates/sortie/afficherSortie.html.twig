@@ -32,8 +32,11 @@
             <button type="submit" {% if not peut_desister %} disabled {% endif %}> Se désister </button>
         </form>
 
-    </section>
+        {% if is_granted('SORTIE_CANCEL', sortie) %}
+            <a href="{{ path('app_sortie_cancel', {id: sortie.id}) }}">Annuler cette sortie</a>
+        {% endif %}
 
+    </section>
 
     <section>
         <h2>Participants inscrits</h2>
