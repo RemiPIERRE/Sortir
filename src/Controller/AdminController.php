@@ -18,8 +18,10 @@ use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
+use App\Service\UserCsvImporter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -331,5 +333,42 @@ class AdminController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Lieu supprimé avec succès.');
         return $this->redirectToRoute('app_admin_villes');
+    }
+
+    #[Route('/users/import', name: 'import_users', methods: ['POST'])]
+    public function importerUtilisateurs(Request $request, UserCsvImporter $importer): Response
+    {
+        if (!$this->isCsrfTokenValid('import_users', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get('csv');
+        if (!$file) {
+            $this->addFlash('error', 'Aucun fichier fourni.');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        $ext = strtolower($file->getClientOriginalExtension());
+        if (!in_array($ext, ['csv', 'txt'], true)) {
+            $this->addFlash('error', 'Le fichier doit être au format CSV.');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        $report = $importer->import($file);
+
+        if ($report['created'] > 0) {
+            $this->addFlash('success', $report['created'] . ' compte(s) créé(s) avec succès.');
+        }
+        if (!empty($report['errors'])) {
+            $this->addFlash('error', count($report['errors']) . ' ligne(s) ignorée(s) — voir le détail ci-dessous.');
+            $request->getSession()->set('import_rejects', $report['errors']);
+        }
+        if ($report['created'] === 0 && empty($report['errors'])) {
+            $this->addFlash('error', 'Aucune ligne exploitable dans le fichier.');
+        }
+
+        return $this->redirectToRoute('app_admin_users');
     }
 }

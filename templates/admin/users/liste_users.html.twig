@@ -24,7 +24,8 @@
                 </div>
 
                 <div class="users-head-actions">
-                    <a href="#" class="btn-outline">
+                    <button type="button" class="btn-outline"
+                            onclick="document.getElementById('modal-import').showModal()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -32,7 +33,7 @@
                             <line x1="12" y1="3" x2="12" y2="15"/>
                         </svg>
                         Importer un fichier CSV
-                    </a>
+                    </button>
                     <a href="{{ path('app_admin_add_user') }}" class="btn-corail">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round">
@@ -45,6 +46,41 @@
                     </a>
                 </div>
             </div>
+
+            {% set rejets = app.session.get('import_rejects') %}
+            {% if rejets %}
+                <div class="import-report">
+                    <div class="import-report-head">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        {{ rejets|length }} ligne(s) ignorée(s) lors du dernier import
+                    </div>
+                    <table class="import-report-table">
+                        <thead>
+                        <tr>
+                            <th>Ligne</th>
+                            <th>Email</th>
+                            <th>Raison</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in rejets %}
+                            <tr>
+                                <td>{{ r.line }}</td>
+                                <td>{{ r.email ?: '—' }}</td>
+                                <td>{{ r.reason }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% do app.session.remove('import_rejects') %}
+            {% endif %}
 
             <form method="get" action="{{ path('app_admin_users') }}" class="users-filters" role="search">
                 <div class="search-box">
@@ -89,7 +125,6 @@
                     <tbody>
                     {% for participant in participants %}
                         {% set fullname = (participant.nom ~ ' ' ~ participant.prenom)|trim %}
-
                         {% set initiales = ((participant.prenom|default('')|first) ~ (participant.nom|default('')|first))|upper %}
                         {% if initiales is empty %}
                             {% set initiales = participant.email|first|upper %}
@@ -106,7 +141,7 @@
                                         {% endif %}
                                     </span>
                                     <span class="user-name">
-                                        {{ fullname ? (participant.nom|upper ~ ' ' ~ participant.prenom)|trim : '— — — —' }}
+                                        {{ fullname ? (participant.nom|upper ~ ' ' ~ participant.prenom)|trim : '—' }}
                                     </span>
                                     {% if participant.administrateur %}
                                         <span class="badge-admin">Admin</span>
@@ -114,8 +149,8 @@
                                 </div>
                             </td>
                             <td class="cell-email">{{ participant.email }}</td>
-                            <td>{{ participant.pseudo ?: '— — —' }}</td>
-                            <td class="cell-campus">{{ participant.campus ? participant.campus.nom : '— — —' }}</td>
+                            <td>{{ participant.pseudo ?: '—' }}</td>
+                            <td class="cell-campus">{{ participant.campus ? participant.campus.nom : '—' }}</td>
                             <td>
                                 {% if participant.actif %}
                                     <span class="status status--actif">Actif</span>
@@ -174,4 +209,34 @@
 
         </div>
     </div>
+
+    <dialog id="modal-import" class="modal">
+        <div class="modal-head">
+            <h2>Importer des utilisateurs</h2>
+            <button type="button" class="modal-close" aria-label="Fermer"
+                    onclick="document.getElementById('modal-import').close()">✕
+            </button>
+        </div>
+
+        <form method="post" action="{{ path('app_admin_import_users') }}" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token('import_users') }}">
+
+            <p class="import-help">
+                Fichier <strong>.csv</strong> (séparateur <code>;</code>) avec une ligne d'en-tête :
+                <code>email;password;campus;admin</code><br>
+                Le campus est indiqué par son <strong>nom</strong>. La colonne <code>admin</code> accepte
+                <code>1</code>/<code>0</code>, <code>oui</code>/<code>non</code>, <code>true</code>/<code>false</code>.
+            </p>
+
+            <label class="field-label" for="csv-file">Fichier CSV</label>
+            <input type="file" id="csv-file" name="csv" accept=".csv,text/csv" required>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-ghost"
+                        onclick="document.getElementById('modal-import').close()">Annuler
+                </button>
+                <button type="submit" class="btn-corail">Importer</button>
+            </div>
+        </form>
+    </dialog>
 {% endblock %}

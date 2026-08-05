@@ -427,6 +427,7 @@
     margin-top: 1.2rem;
 }
 
+
 @media (max-width: 720px) {
     .users-head {
         align-items: stretch;
@@ -458,4 +459,97 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.import-help {
+    margin: 0 0 1.2rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--gris-texte);
+}
+
+.import-help code {
+    background: var(--gris-fond);
+    border: 1px solid var(--gris-bord);
+    border-radius: 5px;
+    padding: 0.05rem 0.35rem;
+    font-size: 0.82rem;
+    color: var(--navy);
+}
+
+#modal-import input[type="file"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px dashed var(--gris-bord);
+    border-radius: 8px;
+    background: var(--gris-fond);
+    font-size: 0.88rem;
+    color: var(--navy);
+    cursor: pointer;
+}
+
+#modal-import .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin-top: 1.4rem;
+}
+
+#modal-import .modal-actions button {
+    width: auto;
+    margin-top: 0;
+}
+
+.import-report {
+    background: var(--blanc);
+    border: 1px solid rgba(178, 58, 58, 0.3);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.import-report-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
+    background: rgba(178, 58, 58, 0.08);
+    color: var(--etat-annulee);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(178, 58, 58, 0.2);
+}
+
+.import-report-head svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.import-report-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.import-report-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gris-texte);
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid var(--gris-bord);
+}
+
+.import-report-table td {
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid var(--gris-bord);
+    font-size: 0.88rem;
+    color: var(--navy);
+}
+
+.import-report-table tr:last-child td {
+    border-bottom: none;
 }
