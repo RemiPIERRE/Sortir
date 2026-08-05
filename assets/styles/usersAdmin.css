@@ -1,0 +1,461 @@
+.admin-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--gris-texte);
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 1.2rem;
+}
+
+.admin-back:hover {
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.btn-corail,
+.btn-navy,
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-corail svg,
+.btn-navy svg,
+.btn-outline svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+.btn-corail {
+    background: var(--corail);
+    color: var(--blanc);
+    border: none;
+    box-shadow: 0 2px 8px rgba(232, 93, 52, 0.35);
+}
+
+.btn-corail:hover {
+    background: var(--corail-fonce);
+    color: var(--blanc);
+    text-decoration: none;
+}
+
+.btn-navy {
+    background: var(--navy-fonce);
+    color: var(--blanc);
+    border: none;
+}
+
+.btn-navy:hover {
+    background: var(--bleu);
+    color: var(--blanc);
+    text-decoration: none;
+}
+
+.btn-outline {
+    background: var(--blanc);
+    color: var(--navy);
+    border: 1px solid var(--gris-bord);
+}
+
+.btn-outline:hover {
+    border-color: var(--navy);
+    background: var(--gris-fond);
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.users-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.users-head .admin-header {
+    margin-bottom: 0;
+}
+
+.users-head-actions {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.users-filters {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.search-box {
+    position: relative;
+    flex: 1 1 320px;
+}
+
+.search-box svg {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--gris-texte);
+    pointer-events: none;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.7rem 1rem 0.7rem 2.7rem;
+    border: 1px solid var(--gris-bord);
+    border-radius: 10px;
+    background: var(--blanc);
+    color: var(--navy);
+    font-size: 0.9rem;
+}
+
+.search-box input:focus {
+    outline: 2px solid var(--corail);
+    outline-offset: 1px;
+}
+
+.users-filters select {
+    flex: 0 0 auto;
+    min-width: 200px;
+    width: auto;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--gris-bord);
+    border-radius: 10px;
+    background: var(--blanc);
+    color: var(--navy);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.users-filters select:focus {
+    outline: 2px solid var(--corail);
+    outline-offset: 1px;
+}
+
+.users-table-card {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table thead th {
+    background: var(--gris-fond);
+    color: var(--gris-texte);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: left;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--gris-bord);
+    white-space: nowrap;
+}
+
+.users-table tbody td {
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--gris-bord);
+    font-size: 0.9rem;
+    color: var(--navy);
+    background: transparent;
+    vertical-align: middle;
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.users-table tbody tr:nth-child(even) {
+    background: transparent;
+}
+
+.users-table tbody tr:hover {
+    background: var(--gris-fond);
+}
+
+.user-block {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.row-check {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--corail);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.user-initials {
+    width: 26px;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gris-texte);
+}
+
+.user-name {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.badge-admin {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.12rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(43, 74, 122, 0.12);
+    color: var(--bleu);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.cell-email {
+    color: var(--gris-texte);
+}
+
+.cell-campus {
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.status--actif {
+    background: rgba(60, 140, 92, 0.14);
+    color: var(--etat-ouverte);
+}
+
+.status--actif::before {
+    background: var(--etat-ouverte);
+}
+
+.status--inactif {
+    background: rgba(178, 58, 58, 0.12);
+    color: var(--etat-annulee);
+}
+
+.status--inactif::before {
+    background: var(--etat-annulee);
+}
+
+.row-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--gris-bord);
+    background: var(--blanc);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-action svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.btn-action--edit {
+    color: var(--navy);
+}
+
+.btn-action--edit:hover {
+    border-color: var(--navy);
+    background: var(--gris-fond);
+    text-decoration: none;
+}
+
+.btn-action--off {
+    color: var(--etat-annulee);
+    border-color: rgba(178, 58, 58, 0.3);
+    background: rgba(178, 58, 58, 0.05);
+}
+
+.btn-action--off:hover {
+    background: rgba(178, 58, 58, 0.12);
+}
+
+.btn-action--on {
+    color: var(--etat-ouverte);
+    border-color: rgba(60, 140, 92, 0.3);
+    background: rgba(60, 140, 92, 0.05);
+}
+
+.btn-action--on:hover {
+    background: rgba(60, 140, 92, 0.12);
+}
+
+.col-actions {
+    text-align: right;
+}
+
+.users-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--gris-texte);
+}
+
+.form-page {
+    max-width: 680px;
+}
+
+.form-card {
+    background: var(--blanc);
+    border: 1px solid var(--gris-bord);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 1.8rem;
+}
+
+.form-card form > div {
+    margin-bottom: 1.1rem;
+}
+
+.form-card label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.35rem;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--gris-bord);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--gris-fond);
+    color: var(--navy);
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+    outline: 2px solid var(--corail);
+    outline-offset: 1px;
+    background: var(--blanc);
+}
+
+.form-card input[type="checkbox"],
+.form-card input[type="radio"] {
+    width: auto;
+    margin-right: 0.4rem;
+    accent-color: var(--corail);
+}
+
+.form-card .form-error-message,
+.form-card .form-error-messages li {
+    color: var(--etat-annulee);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.form-back {
+    margin-top: 1.2rem;
+}
+
+@media (max-width: 720px) {
+    .users-head {
+        align-items: stretch;
+    }
+
+    .users-head-actions .btn-outline,
+    .users-head-actions .btn-corail {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--bleu);
+    color: var(--blanc);
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Campus;
+use App\Entity\Lieu;
 use App\Entity\Participant;
+use App\Entity\Ville;
 use App\Form\AdminCreateUserType;
 use App\Form\AdminEditUserType;
 use App\Form\CampusType;
+use App\Form\LieuType;
+use App\Form\VilleType;
 use App\Repository\CampusRepository;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
-use Cassandra\Type\UserType;
-use Couchbase\User;
+use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +31,28 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AdminController extends AbstractController
 {
     #[Route('', name: 'home', methods: ['GET'])]
-    public function index(): Response
+    public function index(
+        SortieRepository      $sortieRepository,
+        ParticipantRepository $participantRepository,
+        VilleRepository       $villeRepository,
+        CampusRepository      $campusRepository
+    ): Response
     {
-        return $this->render('admin/index.html.twig');
+        $sortiesActives = $sortieRepository->createQueryBuilder('sorties')
+            ->select('COUNT(sorties.id)')
+            ->where('sorties.dateHeureDebut >= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('admin/index.html.twig', [
+            'sortiesTotales' => $sortieRepository->count([]),
+            'sortiesActives' => $sortiesActives,
+            'nbUtilisateurs' => $participantRepository->count([]),
+            'comptesInactifs' => $participantRepository->count(['actif' => false]),
+            'nbVilles' => $villeRepository->count([]),
+            'nbCampus' => $campusRepository->count([]),
+        ]);
     }
 
     #[Route('/campus', name: 'campus', methods: ['GET', 'POST'])]
@@ -110,23 +134,31 @@ class AdminController extends AbstractController
     }
 
     #[Route('/users', name: 'users', methods: ['GET'])]
-    public function afficherListeUtilisateurs(Request $request, ParticipantRepository $participantRepository): Response
+    public function afficherListeUtilisateurs(
+        Request               $request,
+        ParticipantRepository $participantRepository,
+        CampusRepository      $campusRepository
+    ): Response
     {
+        $recherche = $request->query->get('recherche');
+        $campusId = $request->query->get('campus');
 
-        $nomUser = $request->query->get('recherche');
+        $qb = $participantRepository->createQueryBuilder('p')
+            ->leftJoin('p.campus', 'c')->addSelect('c')
+            ->orderBy('p.nom', 'ASC');
 
-        if (!$nomUser) {
-            $listeUser = $participantRepository->findAll();
-        } else {
-            $listeUser = $participantRepository->createQueryBuilder('c')
-                ->where('c.nom LIKE :recherche OR c.prenom LIKE :recherche')
-                ->setParameter('recherche', '%' . $nomUser . '%')
-                ->getQuery()
-                ->getResult();
+        if ($recherche) {
+            $qb->andWhere('p.nom LIKE :r OR p.prenom LIKE :r OR p.email LIKE :r')
+                ->setParameter('r', '%' . $recherche . '%');
+        }
+        if ($campusId) {
+            $qb->andWhere('c.id = :cid')->setParameter('cid', $campusId);
         }
 
         return $this->render('admin/users/liste_users.html.twig', [
-            'participants' => $listeUser,
+            'participants' => $qb->getQuery()->getResult(),
+            'campusList' => $campusRepository->findBy([], ['nom' => 'ASC']),
+            'total' => $participantRepository->count([]),
         ]);
     }
 
@@ -146,6 +178,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/users/edit_user.html.twig', [
             'form' => $form,
+            'participant' => $participant,
         ]);
 
     }
@@ -173,4 +206,130 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/users/{id}/toggle', name: 'user_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function toggleActifUtilisateur(Request $request, EntityManagerInterface $em, Participant $participant): Response
+    {
+        if (!$this->isCsrfTokenValid('toggle' . $participant->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        $participant->setActif(!$participant->isActif());
+        $em->flush();
+
+        $this->addFlash('success', $participant->isActif() ? 'Compte réactivé.' : 'Compte désactivé.');
+        return $this->redirectToRoute('app_admin_users');
+    }
+
+    #[Route('/villes', name: 'villes', methods: ['GET', 'POST'])]
+    public function gererVilles(
+        Request                $request,
+        EntityManagerInterface $em,
+        VilleRepository        $villeRepository,
+        LieuRepository         $lieuRepository
+    ): Response
+    {
+        $ville = new Ville();
+        $villeForm = $this->createForm(VilleType::class, $ville);
+        $villeForm->handleRequest($request);
+        if ($villeForm->isSubmitted() && $villeForm->isValid()) {
+            $em->persist($ville);
+            $em->flush();
+            $this->addFlash('success', 'Ville créée avec succès.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+
+        $lieu = new Lieu();
+        $lieuForm = $this->createForm(LieuType::class, $lieu);
+        $lieuForm->handleRequest($request);
+        if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+            $em->persist($lieu);
+            $em->flush();
+            $this->addFlash('success', 'Lieu créé avec succès.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+
+        $qVille = $request->query->get('qville');
+        $villesQb = $villeRepository->createQueryBuilder('v')->orderBy('v.nom', 'ASC');
+        if ($qVille) {
+            $villesQb->andWhere('v.nom LIKE :q OR v.codePostal LIKE :q')->setParameter('q', '%' . $qVille . '%');
+        }
+
+        $qLieu = $request->query->get('qlieu');
+        $lieuxQb = $lieuRepository->createQueryBuilder('l')
+            ->leftJoin('l.ville', 'v')->addSelect('v')
+            ->orderBy('l.nom', 'ASC');
+        if ($qLieu) {
+            $lieuxQb->andWhere('l.nom LIKE :q OR v.nom LIKE :q')->setParameter('q', '%' . $qLieu . '%');
+        }
+
+        return $this->render('admin/villes/villes.html.twig', [
+            'villes' => $villesQb->getQuery()->getResult(),
+            'lieux' => $lieuxQb->getQuery()->getResult(),
+            'villeForm' => $villeForm,
+            'lieuForm' => $lieuForm,
+        ]);
+    }
+
+    #[Route('/villes/{id}/edit', name: 'edit_ville', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editVille(Request $request, EntityManagerInterface $em, Ville $ville): Response
+    {
+        $form = $this->createForm(VilleType::class, $ville);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Ville modifiée avec succès.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+        return $this->render('admin/villes/edit_ville.html.twig', ['form' => $form, 'ville' => $ville]);
+    }
+
+    #[Route('/villes/{id}/delete', name: 'delete_ville', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function deleteVille(Request $request, EntityManagerInterface $em, Ville $ville): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_ville' . $ville->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+        // garde-fou : pas de suppression si des lieux y sont rattachés
+        if (!$ville->getLieux()->isEmpty()) {
+            $this->addFlash('error', 'Impossible de supprimer « ' . $ville->getNom() . ' » : des lieux y sont rattachés.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+        $em->remove($ville);
+        $em->flush();
+        $this->addFlash('success', 'Ville supprimée avec succès.');
+        return $this->redirectToRoute('app_admin_villes');
+    }
+
+    #[Route('/lieux/{id}/edit', name: 'edit_lieu', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editLieu(Request $request, EntityManagerInterface $em, Lieu $lieu): Response
+    {
+        $form = $this->createForm(LieuType::class, $lieu);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Lieu modifié avec succès.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+        return $this->render('admin/villes/edit_lieu.html.twig', ['form' => $form, 'lieu' => $lieu]);
+    }
+
+    #[Route('/lieux/{id}/delete', name: 'delete_lieu', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function deleteLieu(Request $request, EntityManagerInterface $em, Lieu $lieu): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_lieu' . $lieu->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+
+        if (!$lieu->getSorties()->isEmpty()) {
+            $this->addFlash('error', 'Impossible de supprimer « ' . $lieu->getNom() . ' » : des sorties y sont rattachées.');
+            return $this->redirectToRoute('app_admin_villes');
+        }
+        $em->remove($lieu);
+        $em->flush();
+        $this->addFlash('success', 'Lieu supprimé avec succès.');
+        return $this->redirectToRoute('app_admin_villes');
+    }
 }

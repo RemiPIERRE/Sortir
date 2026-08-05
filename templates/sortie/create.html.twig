@@ -3,13 +3,29 @@
 {% block title %}Créer une sortie{% endblock %}
 
 {% block body %}
+    <div class="admin-page">
+        <div class="admin-container form-page">
 
-    <h1>Créer une sortie</h1>
+            <a href="{{ path('app_home') }}" class="admin-back">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Retour à la liste des sorties
+            </a>
 
-    {{ form(form) }}
+            <header class="admin-header">
+                <p class="admin-label">Création d'une sortie</p>
+                <h1>Créer une nouvelle sortie</h1>
+                <p class="admin-subtitle">Renseignez les informations ci-dessous. Vous pourrez enregistrer un brouillon
+                    ou publier directement.</p>
+            </header>
 
-    <p>
-        <a href="{{ path('app_home') }}">Annuler et revenir à la liste</a>
-    </p>
+            <div class="form-card">
+                {% include 'sortie/_form.html.twig' %}
+            </div>
 
+        </div>
+    </div>
 {% endblock %}
