@@ -24,7 +24,14 @@ public function __construct(
 
         $route = $event->getRequest()->attributes->get('_route');
 
-        if ($route === null || str_starts_with($route, '_') || in_array($route, ['app_profile_create_account', 'app_login', 'app_logout'], true)) {
+        if ($route === null || str_starts_with($route, '_') || in_array($route, [
+                'app_profile_create_account',
+                'app_login',
+                'app_logout',
+                'app_forgot_password_request',
+                'app_check_email',
+                'app_reset_password',
+            ], true)) {
             return;
         }
 
