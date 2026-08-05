@@ -115,7 +115,10 @@ class SortieController extends AbstractController
         EtatSortieManager      $stateManager
     ): Response
     {
-        $this->denyAccessUnlessGranted(SortieVoter::EDIT, $sortie);
+        if (!$this->isGranted(SortieVoter::EDIT, $sortie)) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à éditer cette sortie.');
+            return $this->redirectToRoute('/');
+        }
 
         if (!$stateManager->canBeEdited($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être modifiée.');
@@ -153,7 +156,10 @@ class SortieController extends AbstractController
         EtatSortieManager      $stateManager
     ): Response
     {
-        $this->denyAccessUnlessGranted(SortieVoter::PUBLISH, $sortie);
+        if (!$this->isGranted(SortieVoter::PUBLISH, $sortie)) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à publier cette sortie.');
+            return $this->redirectToRoute('/');
+        }
 
         if (!$this->isCsrfTokenValid('publier' . $sortie->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Jeton de sécurité invalide.');
@@ -180,7 +186,10 @@ class SortieController extends AbstractController
         EtatSortieManager      $stateManager
     ): Response
     {
-        $this->denyAccessUnlessGranted(SortieVoter::CANCEL, $sortie);
+        if (!$this->isGranted(SortieVoter::CANCEL, $sortie)) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à annuler cette sortie.');
+            return $this->redirectToRoute('/');
+        }
 
         if (!$stateManager->canBeCancelled($sortie)) {
             $this->addFlash('error', 'Cette sortie ne peut plus être annulée.');
