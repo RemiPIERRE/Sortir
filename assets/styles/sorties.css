@@ -1,11 +1,3 @@
-/* ============================================================
-   Pages Sorties (détail / annulation / création-édition)
-   Réutilise :root, .admin-container, .admin-back, .admin-header,
-   .btn-corail / .form-card (voir admin.css & users.css).
-   ============================================================ */
-
-/* ---------- Bandeau (hero) ---------- */
-
 .sortie-hero {
     position: relative;
     padding: 2rem 2.2rem;
@@ -31,7 +23,6 @@
     font-size: 2.4rem;
 }
 
-/* Badge d'état (sur fond sombre) */
 .etat-badge {
     display: inline-flex;
     align-items: center;
@@ -81,7 +72,6 @@
     color: #b0b0b0;
 }
 
-/* Bouton "Annuler la sortie" dans le hero */
 .btn-hero-danger {
     display: inline-flex;
     align-items: center;
@@ -109,7 +99,6 @@
     height: 16px;
 }
 
-/* Tuiles d'infos dans le hero */
 .sortie-hero-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -146,8 +135,6 @@
     color: rgba(255, 255, 255, 0.7);
     flex-shrink: 0;
 }
-
-/* ---------- Timeline des états ---------- */
 
 .timeline-card {
     background: var(--blanc);
@@ -222,8 +209,6 @@
     color: var(--navy);
 }
 
-/* ---------- Grille contenu ---------- */
-
 .sortie-grid {
     display: grid;
     grid-template-columns: 1.8fr 1fr;
@@ -270,7 +255,6 @@
     line-height: 1.6;
 }
 
-/* Lieu + emplacement carte (vide pour l'instant) */
 .lieu-nom {
     margin: 0 0 0.2rem;
     font-weight: 700;
@@ -305,7 +289,6 @@
     color: var(--gris-texte);
 }
 
-/* Organisateur */
 .organisateur-row {
     display: flex;
     align-items: center;
@@ -359,7 +342,6 @@
     transition: transform 0.15s ease, color 0.15s ease;
 }
 
-/* Participants inscrits */
 .inscrit-row {
     display: flex;
     align-items: center;
@@ -422,7 +404,6 @@
     color: var(--gris-texte);
 }
 
-/* Actions d'inscription (participant) */
 .sortie-actions {
     display: flex;
     gap: 0.7rem;
@@ -472,8 +453,6 @@
     opacity: 0.45;
     cursor: not-allowed;
 }
-
-/* ---------- Page d'annulation ---------- */
 
 .cancel-summary {
     display: flex;
@@ -592,8 +571,6 @@
     height: 16px;
 }
 
-/* ---------- Création / édition : pastille "v2" ---------- */
-
 .ghost-pill {
     display: inline-flex;
     align-items: center;
@@ -608,15 +585,11 @@
     margin-bottom: 1.2rem;
 }
 
-/* ---------- Responsive ---------- */
-
 @media (max-width: 860px) {
     .sortie-grid {
         grid-template-columns: 1fr;
     }
 }
-
-/* ---------- Création / édition : layout du formulaire ---------- */
 
 .form-grid-2 {
     display: grid;
@@ -624,7 +597,6 @@
     gap: 1.2rem;
 }
 
-/* les lignes internes ne cumulent pas la marge : on s'appuie sur le gap */
 .form-grid-2 > div {
     margin-bottom: 0;
 }
@@ -655,7 +627,6 @@
     }
 }
 
-/* utilitaire : masquer un champ tant que le JS ne le révèle pas */
 .js-hidden {
     display: none;
 }
