@@ -31,7 +31,7 @@ class CreateAccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pseudo', TextType::class, [
+            ->add('pseudo', TextType::class, [ // NotBlank oblige l'utilisateur à remplir ces champs
                 'constraints' => [
                     new NotBlank(message: 'Veuillez saisir un pseudo.'),
                 ],

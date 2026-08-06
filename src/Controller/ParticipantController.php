@@ -8,7 +8,6 @@ use App\Form\ProfileType;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Flow\FormFlowInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -69,7 +68,7 @@ final class ParticipantController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $estMonProfil = $this->getUser() === $participant;
+        $estMonProfil = $this->getUser() === $participant; // permet au template de savoir s'il doit afficher le bouton "Modifier mon profil"
 
         return $this->render('profile/profile_detail.html.twig', [
             'participant' => $participant,
@@ -115,7 +114,7 @@ final class ParticipantController extends AbstractController
             }
 
 
-            // gestion de la suppression
+            // gestion de la suppression de la photo grâce au bouton "Supprimer ma photo"
 
             if ($form->has('deletePhoto') && $form->get('deletePhoto')->getData()) {
                 $ancienCheminPhoto = $this->getParameter('photos_directory') . '/' . $participant->getPhoto();
@@ -141,14 +140,18 @@ final class ParticipantController extends AbstractController
     }
 
     /**
-     * @param \Symfony\Component\Form\FormInterface|FormFlowInterface $form
+     * @param \Symfony\Component\Form\FormInterface $form
      * @param SluggerInterface $slugger
      * @param Participant $participant
      * @param EntityManagerInterface $em
      * @return void
      */
-    private function uploadPhoto(\Symfony\Component\Form\FormInterface|FormFlowInterface $form, SluggerInterface $slugger, Participant $participant, EntityManagerInterface $em): void
+    private function uploadPhoto(\Symfony\Component\Form\FormInterface $form, SluggerInterface $slugger, Participant $participant, EntityManagerInterface $em): void
     {
+
+        // gère l'enregistrement d'une photo de profil, utilisé à la fois pour creation de compte et éditer son profil
+        // reçoit un nom unique pour éviter tout conflit puis est sauvegardée sur le serveur
+
         $photoFile = $form->get('photoFile')->getData();
 
         if ($photoFile) {

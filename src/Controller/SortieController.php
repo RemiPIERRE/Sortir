@@ -30,6 +30,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  */
 #[Route('/sortie', name: 'app_sortie_')]
 #[IsGranted('ROLE_USER')]
+
 class SortieController extends AbstractController
 {
     /**
@@ -41,9 +42,13 @@ class SortieController extends AbstractController
     {
 
         $user = $this->getUser();
+        // on vérifie sur l'utilisateur est déjà inscrit
         $dejaInscrit = $sortie->getInscrits()->contains($user);
 
         return $this->render('sortie/show.html.twig', [
+
+        // conditions pour savoir quels boutons afficher (s'inscrire ou se désister et afficher un statut différent)
+
             'sortie' => $sortie,
             'peut_inscrire' => $stateManager->canRegister($sortie) && !$dejaInscrit,
             'peut_desister' => $stateManager->canWithdraw($sortie) && $dejaInscrit,
@@ -66,14 +71,14 @@ class SortieController extends AbstractController
     ): Response
     {
         $sortie = new Sortie();
-        $sortie->setOrganisateur($this->getUser());
+        $sortie->setOrganisateur($this->getUser()); // l'organisateur est l'user connecté
 
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $publish = $form->has('publier') && $form->get('publier')->isClicked();
-            $stateManager->initialize($sortie, $publish);
+            $publish = $form->has('publier') && $form->get('publier')->isClicked(); // on regarde si l'user a cliqué sur "publier"
+            $stateManager->initialize($sortie, $publish); // EtatSortieManager applique la règle métier et place la sortie dans son bon état
 
             $ville = $form->get('ville')->getData();
             if (!$ville) {
@@ -121,10 +126,13 @@ class SortieController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', $publish ? 'Sortie créée et publiée.' : 'Sortie enregistrée.');
+
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('sortie/create.html.twig', ['form' => $form]);
+        return $this->render('sortie/create.html.twig', [
+            'form' => $form,
+        ]);
     }
 
     /**
@@ -143,12 +151,12 @@ class SortieController extends AbstractController
         EtatSortieManager      $stateManager
     ): Response
     {
-        if (!$this->isGranted(SortieVoter::EDIT, $sortie)) {
+        if (!$this->isGranted(SortieVoter::EDIT, $sortie)) { // on regarde les droits, seul l'organisateur a le droit de modifier une sortie
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à éditer cette sortie.');
             return $this->redirectToRoute('/');
         }
 
-        if (!$stateManager->canBeEdited($sortie)) {
+        if (!$stateManager->canBeEdited($sortie)) { // même si les droits sont OK, selon certaines conditions la sortie ne peut plus être modifiée (ex: déjà commencée)
             $this->addFlash('error', 'Cette sortie ne peut plus être modifiée.');
 
             return $this->redirectToRoute('app_home');
@@ -158,6 +166,8 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si l'organisateur clique sur "Publier", la sortie passe
+            // de l'état "En création" à l'état "Ouverte" et devient visible pour les autres participants
             $publish = $form->has('publier') && $form->get('publier')->isClicked();
             if ($publish) {
                 $stateManager->publish($sortie);
@@ -336,6 +346,8 @@ class SortieController extends AbstractController
 
         $sortie->removeInscrit($user);
 
+
+        // s'il y a un désistement et que la date limite n'est pas dépassée, on change l'état en Ouverte si elle était Clôturée
         if ($sortie->getEtat()->getLibelle() === EtatSortieManager::CLOSED
             && new \DateTimeImmutable() <= $sortie->getDateLimiteInscription()) {
             $sortie->setEtat($stateManager->getState(EtatSortieManager::OPEN));
