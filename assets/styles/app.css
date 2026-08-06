@@ -6,6 +6,10 @@
 @import 'login.css';
 @import 'navbar.css';
 @import 'profile.css';
+@import 'admin.css';
+@import 'usersAdmin.css';
+@import 'campusAdmin.css';
+@import 'sorties.css';
 
 :root {
     --navy-fonce: #12243d;

@@ -46,6 +46,7 @@ final class HomeController extends AbstractController
         $inscrit = $request->query->getBoolean('inscrit');
         $nonInscrit = $request->query->getBoolean('nonInscrit');
         $passees = $request->query->getBoolean('passees');
+        $ouvertes = $request->query->getBoolean('ouvertes');
 
         if ($request->query->has('campus')) {
             $campus = $campusId ? $campusRepository->find($campusId) : null;
@@ -62,6 +63,7 @@ final class HomeController extends AbstractController
             $inscrit,
             $nonInscrit,
             $passees,
+            $ouvertes,
             $participant
         );
 

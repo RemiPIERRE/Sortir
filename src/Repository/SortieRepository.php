@@ -24,9 +24,9 @@ class SortieRepository extends ServiceEntityRepository
         bool        $inscrit,
         bool        $nonInscrit,
         bool        $passees,
+        bool        $ouvertes,
         Participant $participant
-    ): array
-    {
+    ): array {
         $queryBuilder = $this->createQueryBuilder('s');
 
         $queryBuilder
@@ -82,6 +82,12 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('s.dateHeureDebut < :maintenant')
                 ->setParameter('maintenant', new \DateTimeImmutable());
+        }
+
+        if ($ouvertes) {
+            $queryBuilder
+                ->andWhere('ec.libelle = :ouverte')
+                ->setParameter('ouverte', 'Ouverte');
         }
 
         return $queryBuilder

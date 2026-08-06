@@ -1,28 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier une sortie{% endblock %}
+{% block title %}Modifier une ville{% endblock %}
 
 {% block body %}
     <div class="admin-page">
         <div class="admin-container form-page">
 
-            <a href="{{ path('app_sortie_show', {id: sortie.id}) }}" class="admin-back">
+            <a href="{{ path('app_admin_villes') }}" class="admin-back">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"/>
                     <polyline points="12 19 5 12 12 5"/>
                 </svg>
-                Retour à la sortie
+                Retour à la gestion
             </a>
 
             <header class="admin-header">
-                <p class="admin-label">Modification</p>
-                <h1>Modifier « {{ sortie.nom }} »</h1>
-                <p class="admin-subtitle">Mettez à jour les informations de la sortie.</p>
+                <p class="admin-label">Administration</p>
+                <h1>Modifier « {{ ville.nom }} »</h1>
+                <p class="admin-subtitle">Mettez à jour le nom ou le code postal de la ville.</p>
             </header>
 
             <div class="form-card">
-                {% include 'sortie/_form.html.twig' %}
+                {{ form(form) }}
             </div>
 
         </div>

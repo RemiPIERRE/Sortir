@@ -1,15 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-Ajouter un utilisateur
-{% endblock %}
+{% block title %}Ajouter un utilisateur{% endblock %}
 
 {% block body %}
+    <div class="admin-page">
+        <div class="admin-container form-page">
 
-<h1>Ajouter un utilisateur</h1>
-    {{ form(form) }}
+            <header class="admin-header">
+                <p class="admin-label">Administration</p>
+                <h1>Ajouter un utilisateur</h1>
+                <p class="admin-subtitle">Créez manuellement un nouveau compte participant.</p>
+            </header>
 
-    <a href="{{ path('app_admin_users') }}">Retour</a>
+            <div class="form-card">
+                {{ form(form) }}
+            </div>
+
+            <p class="form-back">
+                <a href="{{ path('app_admin_users') }}">← Retour à la liste</a>
+            </p>
+
+        </div>
+    </div>
 {% endblock %}
 
 
