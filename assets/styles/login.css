@@ -1,3 +1,4 @@
+
 .login-page {
     min-height: 100vh;
     display: grid;
@@ -234,7 +235,9 @@
     color: #a23c1e;
 }
 
+
 @media (max-width: 860px) {
+
     .login-page {
         grid-template-columns: 1fr;
     }
@@ -242,6 +245,7 @@
     .login-presentation {
         gap: 28px;
         padding: 40px;
+
     }
 
     .login-presentation h2 {
