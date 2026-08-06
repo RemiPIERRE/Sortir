@@ -42,7 +42,8 @@ class SortieRepository extends ServiceEntityRepository
         bool        $passees,
         bool        $ouvertes,
         Participant $participant
-    ): array {
+    ): array
+    {
         $queryBuilder = $this->createQueryBuilder('s');
 
         $queryBuilder
@@ -102,7 +103,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($ouvertes) {
             $queryBuilder
-                ->andWhere('ec.libelle = :ouverte')
+                ->andWhere('e.libelle = :ouverte')
                 ->setParameter('ouverte', 'Ouverte');
         }
 
