@@ -102,7 +102,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($ouvertes) {
             $queryBuilder
-                ->andWhere('ec.libelle = :ouverte')
+                ->andWhere('e.libelle = :ouverte')
                 ->setParameter('ouverte', 'Ouverte');
         }
 
