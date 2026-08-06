@@ -37,8 +37,8 @@
             <div class="sortie-hero">
                 <div class="sortie-hero-top">
                     <span class="etat-badge etat--{{ etatSlug }}">{{ libelle }}</span>
-
-                    {% if estOrganisateur and libelle not in ['Annulée', 'Terminée', 'Historisée'] %}
+                    
+                    {% if is_granted('SORTIE_CANCEL', sortie) %}
                         <a href="{{ path('app_sortie_cancel', {id: sortie.id}) }}" class="btn-hero-danger">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -102,6 +102,18 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                             </svg>
                             {{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}
+                        </div>
+                    </div>
+
+                    <div class="hero-stat">
+                        <p class="hero-stat-label">Campus</p>
+                        <div class="hero-stat-value">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10 12 5 2 10l10 5 10-5z"/>
+                                <path d="M6 12v5c0 1 2 3 6 3s6-2 6-3v-5"/>
+                            </svg>
+                            {{ sortie.campus ? sortie.campus.nom : '—' }}
                         </div>
                     </div>
                 </div>

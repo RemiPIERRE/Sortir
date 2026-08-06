@@ -29,36 +29,37 @@ class CheckProfileCompleteSubscriber implements EventSubscriberInterface
      * Redirige vers la complétion de compte si le profil courant est incomplet.
      */
     public function onKernelRequest(RequestEvent $event): void
-    {
-        if (!$event->isMainRequest()) {
-            return;
-        }
-
-        $request = $event->getRequest();
-        
-        if (str_starts_with($request->getPathInfo(), '/api')) {
-            return;
-        }
-
-        $route = $request->attributes->get('_route');
-
-        if ($route === null || str_starts_with($route, '_') || in_array($route, [
-                'app_profile_create_account',
-                'app_login',
-                'app_logout',
-                'app_forgot_password_request',
-                'app_check_email',
-                'app_reset_password',
-            ], true)) {
-            return;
-        }
-
-        if (!$this->verifInfoUser->profileIsComplete()) {
-            $event->setResponse(new RedirectResponse(
-                $this->router->generate('app_profile_create_account')
-            ));
-        }
+{
+    if (!$event->isMainRequest()) {
+        return;
     }
+
+    $request = $event->getRequest();
+
+    // Ne pas appliquer le contrôle sur l'API
+    if (str_starts_with($request->getPathInfo(), '/api')) {
+        return;
+    }
+
+    $route = $request->attributes->get('_route');
+
+    if ($route === null || str_starts_with($route, '_') || in_array($route, [
+            'app_profile_create_account',
+            'app_login',
+            'app_logout',
+            'app_forgot_password_request',
+            'app_check_email',
+            'app_reset_password',
+        ], true)) {
+        return;
+    }
+
+    if (!$this->verifInfoUser->profileIsComplete()) {
+        $event->setResponse(new RedirectResponse(
+            $this->router->generate('app_profile_create_account')
+        ));
+    }
+}
 
     /**
      * S'abonne à l'événement kernel.request.

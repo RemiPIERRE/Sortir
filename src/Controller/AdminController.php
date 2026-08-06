@@ -243,6 +243,32 @@ class AdminController extends AbstractController
      *
      * Un compte désactivé est refusé à l'authentification (voir UserChecker).
      */
+    #[Route('/users/{id}/delete', name: 'user_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function supprimerUtilisateur(Request $request, EntityManagerInterface $em, Participant $participant): Response
+    {
+
+        if (!$this->isCsrfTokenValid('delete' . $participant->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de sécurité invalide.');
+
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        // protection pour éviter de supprimer un utilisateur qui est rattaché à des sorties (organisateur ou participant)
+        // réflexion autour de la suppression si inscrit à des sorties (gérer en cascade dans SQL, mais s'éloigne du cahier des charges)
+
+        if (!$participant->getSortiesOrganisees()->isEmpty() || !$participant->getSortiesInscrites()->isEmpty()) {
+            $this->addFlash('error', 'Impossible de supprimer cet utilisateur: rattaché à des sorties.');
+            return $this->redirectToRoute('app_admin_users');
+        }
+
+        $em->remove($participant);
+        $em->flush();
+
+        $this->addFlash('success', 'Utilisateur supprimé avec succès');
+
+        return $this->redirectToRoute('app_admin_users');
+    }
+
     #[Route('/users/{id}/toggle', name: 'user_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function toggleActifUtilisateur(Request $request, EntityManagerInterface $em, Participant $participant): Response
     {
