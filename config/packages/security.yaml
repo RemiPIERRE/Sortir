@@ -17,20 +17,21 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            user_checker: App\Security\UserChecker
+            user_checker: App\Security\UserChecker # vérifie que le compte est toujours actif à chaque connexion
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: app_redirect_after_login
             logout:
-                path: app_logout
-                target: app_login
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 2592000
                 # where to redirect after logout
                 # target: app_any_route
+                path: app_logout
+                target: app_login
+            remember_me: # permet la case à cocher "se souvenir de moi"
+                secret: '%kernel.secret%'
+                lifetime: 2592000 # correspond à 30 jours
+
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -39,7 +40,9 @@ security:
             # switch_user: true
 
     # Note: Only the *first* matching rule is applied
-    access_control:
+
+
+    access_control: # Sécurise les routes en fonction du rôle de l'utilisateur
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }

@@ -25,13 +25,15 @@ class SortieRepository extends ServiceEntityRepository
         bool        $nonInscrit,
         bool        $passees,
         Participant $participant
-    ): array {
+    ): array
+    {
         $queryBuilder = $this->createQueryBuilder('s');
 
         $queryBuilder
             ->join('s.etat', 'e')
-            ->andWhere('e.libelle != :etatCreation')
-            ->setParameter('etatCreation', 'En création');
+            ->andWhere('e.libelle != :etatCreation OR s.organisateur = :participant')
+            ->setParameter('etatCreation', 'En création')
+            ->setParameter('participant', $participant);
 
         if ($campus) {
             $queryBuilder

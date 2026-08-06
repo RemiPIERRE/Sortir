@@ -9,6 +9,11 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 
+// Permet de rediriger à partir de CHAQUE URL du site vers la page create_account SI le profil n'est pas complété (grâce à verifInfoUser).
+// Si profil complet -> redirection vers la page d'accueil
+// Intérêt du kernel : se déclenche automatiquement, à chaque requête, avant les controllers
+// centralise le code en un seul endroit, pas de duplication dans chaque controller
+
 class CheckProfileCompleteSubscriber implements EventSubscriberInterface
 {
 

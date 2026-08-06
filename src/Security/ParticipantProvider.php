@@ -60,7 +60,7 @@ class ParticipantProvider implements UserProviderInterface, PasswordUpgraderInte
     }
 
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void // méthode de hashage de mdp
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void // met à jour le mdp stocké si l'algo de sécurité utilisé a changé
     {
         // Sécurité : on vérifie qu'on manipule bien un Participant
         if (!$user instanceof Participant) {

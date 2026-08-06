@@ -6,7 +6,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Entity\Participant;
 
 // Service qui va permettre de récupérer getUser(), ainsi après la page d'authentification, si tous les champs obligatoires sont remplis,
-// redirection vers la page d'home, sinon redirection vers la page de création de compte
+// redirection vers la page d'accueil, sinon redirection vers la page de création de compte
 
 class VerifInfoUser
 {
