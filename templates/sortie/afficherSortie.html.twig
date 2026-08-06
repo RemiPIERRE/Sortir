@@ -2,6 +2,15 @@
 
 {% block title %}Détail de la sortie{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+{% endblock %}
+
 {% block body %}
 
     <h1>{{ sortie.nom }}</h1>
@@ -16,6 +25,19 @@
         <p>Nombre de places : {{ sortie.inscrits|length }} / {{ sortie.nbInscriptionMax }}</p>
         <p>Campus : {{ sortie.campus ? sortie.campus.nom : '' }}</p>
         <p>Lieu : {{ sortie.lieu ? sortie.lieu.nom : '' }}</p>
+
+        {% if sortie.lieu
+            and sortie.lieu.latitude is not null
+            and sortie.lieu.longitude is not null
+        %}
+            <div
+                id="map"
+                data-latitude="{{ sortie.lieu.latitude }}"
+                data-longitude="{{ sortie.lieu.longitude }}"
+                data-lieu="{{ sortie.lieu.nom }}"
+            ></div>
+        {% endif %}
+
         <p>Description : {{ sortie.infoSortie }}</p>
 
         {% if sortie.etat and sortie.etat.libelle == 'Annulée' and sortie.motifAnnulation %}
@@ -53,3 +75,10 @@
     </p>
 
 {% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    {{ parent() }}
+{% endblock %}
+
