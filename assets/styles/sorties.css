@@ -267,14 +267,17 @@
 }
 
 .map-placeholder {
-    height: 220px;
+    height: 350px;
     border-radius: 12px;
-    border: 1px dashed var(--gris-bord);
+    overflow: hidden;
+    border: 1px solid var(--gris-bord);
     background: var(--gris-fond);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gris-bord);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    margin: 0;
 }
 
 .map-placeholder svg {

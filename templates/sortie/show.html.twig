@@ -2,6 +2,15 @@
 
 {% block title %}{{ sortie.nom }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+{% endblock %}
+
 {% block body %}
     {% set libelle = sortie.etat ? sortie.etat.libelle : '' %}
 
@@ -37,7 +46,7 @@
             <div class="sortie-hero">
                 <div class="sortie-hero-top">
                     <span class="etat-badge etat--{{ etatSlug }}">{{ libelle }}</span>
-                    
+
                     {% if is_granted('SORTIE_CANCEL', sortie) %}
                         <a href="{{ path('app_sortie_cancel', {id: sortie.id}) }}" class="btn-hero-danger">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -204,11 +213,16 @@
                         {% endif %}
 
                         <div class="map-placeholder">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                <circle cx="12" cy="10" r="3"/>
-                            </svg>
+                            {% if sortie.lieu
+                                and sortie.lieu.latitude is not null
+                                and sortie.lieu.longitude is not null %}
+                                <div
+                                    id="map"
+                                    data-latitude="{{ sortie.lieu.latitude }}"
+                                    data-longitude="{{ sortie.lieu.longitude }}"
+                                    data-lieu="{{ sortie.lieu.nom }}"
+                                ></div>
+                            {% endif %}
                         </div>
 
                         {% if sortie.lieu and sortie.lieu.latitude is defined and sortie.lieu.latitude %}
@@ -297,4 +311,10 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    {{ parent() }}
 {% endblock %}

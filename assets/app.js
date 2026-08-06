@@ -6,6 +6,8 @@ import './map.js'
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 
 import 'styles/tom-select.css';
+import './place-filter.js'
+import './map.js'
 import TomSelect from 'tom-select';
 
 function initSortieForm() {
@@ -15,7 +17,7 @@ function initSortieForm() {
     const nouveauLieuEl = document.querySelector('#sortie_nouveauLieu');
     const cpWrap = document.querySelector('#cp-nouvelle-ville');
     const nouveauLieuWrap = document.querySelector('#nouveau-lieu-fields');
-    
+
     if (!villeEl || !lieuEl) {
         return;
     }
