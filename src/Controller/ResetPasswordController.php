@@ -20,6 +20,12 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
+/**
+ * Parcours de réinitialisation de mot de passe (bundle SymfonyCasts ResetPassword) :
+ * demande, confirmation d'envoi, puis changement effectif via le lien reçu par email.
+ *
+ * Ces routes doivent rester accessibles aux utilisateurs non connectés.
+ */
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractController
 {
@@ -27,8 +33,9 @@ class ResetPasswordController extends AbstractController
 
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
-        private EntityManagerInterface $entityManager
-    ) {
+        private EntityManagerInterface       $entityManager
+    )
+    {
     }
 
     /**
@@ -45,7 +52,7 @@ class ResetPasswordController extends AbstractController
             $email = $form->get('email')->getData();
 
             return $this->processSendingPasswordResetEmail($email, $mailer, $translator
-);
+            );
         }
 
         return $this->render('reset_password/request.html.twig', [
@@ -157,13 +164,12 @@ class ResetPasswordController extends AbstractController
 
         $email = (new TemplatedEmail())
             ->from(new Address('noreply@sortir.com', 'Sortir.com - Réinitialisation'))
-            ->to((string) $user->getEmail())
+            ->to((string)$user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
-            ])
-        ;
+            ]);
 
         $mailer->send($email);
 

@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Campus (site) auquel sont rattachés des participants et des sorties.
+ */
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
 class Campus
 {

@@ -16,8 +16,17 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+/**
+ * Espace profil de l'utilisateur : complétion du compte, consultation et édition.
+ *
+ * L'édition est strictement limitée au propre profil de l'utilisateur.
+ */
 final class ParticipantController extends AbstractController
 {
+    /**
+     * Complète le profil de l'utilisateur courant après sa première connexion
+     * (mot de passe défini et hashé, photo optionnelle).
+     */
     #[Route('/profile/create-account', name: 'app_profile_create_account')]
     #[IsGranted('ROLE_USER')]
     public function createAccount(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, SluggerInterface $slugger): Response
@@ -44,6 +53,11 @@ final class ParticipantController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le détail d'un profil et indique s'il s'agit de celui de l'utilisateur courant.
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException si le participant n'existe pas
+     */
     #[Route('/profile/{id}', name: 'app_profile')]
     #[IsGranted('ROLE_USER')]
     public function profile(int $id, ParticipantRepository $participantRepository): Response
@@ -64,6 +78,15 @@ final class ParticipantController extends AbstractController
 
     }
 
+    /**
+     * Affiche et traite l'édition d'un profil.
+     *
+     * Sécurité : un utilisateur ne peut modifier que son propre profil. Le mot de
+     * passe n'est ré-hashé que s'il est renseigné ; la photo peut être remplacée ou supprimée.
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException si le participant n'existe pas
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException si ce n'est pas son profil
+     */
     #[Route('/profile/{id}/edit', name: 'app_profile_edit')]
     #[IsGranted('ROLE_USER')]
     public function edit(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository, SluggerInterface $slugger): Response

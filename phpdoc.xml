@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+    configVersion="3"
+>
+    <title>Documentation Sortir</title>
+
+    <paths>
+        <output>docs/api</output>
+        <directory>src</directory>
+    </paths>
+</phpdocumentor>

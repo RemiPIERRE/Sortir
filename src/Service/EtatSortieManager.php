@@ -8,6 +8,14 @@ use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Repository\EtatRepository;
 
+/**
+ * Centralise toute la logique de cycle de vie d'une sortie.
+ *
+ * Résout les entités Etat par libellé (avec cache), applique les transitions
+ * manuelles (publication, annulation, clôture) et calcule les transitions
+ * automatiques liées au temps et à la capacité (refresh). Les méthodes can*()
+ * expriment les règles métier réutilisées par les contrôleurs et les vues.
+ */
 class EtatSortieManager
 {
     public const CREATED = 'En création';
@@ -24,6 +32,11 @@ class EtatSortieManager
     {
     }
 
+    /**
+     * Retourne l'entité Etat correspondant à un libellé, avec mise en cache.
+     *
+     * @throws \RuntimeException si le libellé n'existe pas en base
+     */
     public function getState(string $label): Etat
     {
         if (!isset($this->stateCache[$label])) {
@@ -40,11 +53,19 @@ class EtatSortieManager
         return $this->stateCache[$label];
     }
 
+    /**
+     * Fixe l'état initial d'une sortie : « Ouverte » si publiée, sinon « En création ».
+     */
     public function initialize(Sortie $sortie, bool $publish): void
     {
         $sortie->setEtat($this->getState($publish ? self::OPEN : self::CREATED));
     }
 
+    /**
+     * Publie une sortie (« En création » → « Ouverte »).
+     *
+     * @throws \LogicException si la sortie n'est pas dans l'état « En création »
+     */
     public function publish(Sortie $sortie): void
     {
         if (!$this->isInState($sortie, self::CREATED)) {
@@ -53,6 +74,11 @@ class EtatSortieManager
         $sortie->setEtat($this->getState(self::OPEN));
     }
 
+    /**
+     * Annule une sortie en enregistrant son motif.
+     *
+     * @throws \LogicException si la sortie n'est pas annulable, ou si le motif est vide
+     */
     public function cancel(Sortie $sortie, string $reason): void
     {
         if (!$this->canBeCancelled($sortie)) {
@@ -66,6 +92,9 @@ class EtatSortieManager
         $sortie->setEtat($this->getState(self::CANCELLED));
     }
 
+    /**
+     * Clôture les inscriptions (« Ouverte » → « Clôturée »). Sans effet dans les autres états.
+     */
     public function close(Sortie $sortie): void
     {
         if (!$this->isInState($sortie, self::OPEN)) {
@@ -74,11 +103,17 @@ class EtatSortieManager
         $sortie->setEtat($this->getState(self::CLOSED));
     }
 
+    /**
+     * Indique si la sortie peut encore être modifiée (uniquement en « En création »).
+     */
     public function canBeEdited(Sortie $sortie): bool
     {
         return $this->isInState($sortie, self::CREATED);
     }
 
+    /**
+     * Indique si la sortie peut être annulée : état « Ouverte » ou « Clôturée » et non encore commencée.
+     */
     public function canBeCancelled(Sortie $sortie): bool
     {
         $stateOk = $this->isInOneOfStates($sortie, [self::OPEN, self::CLOSED]);
@@ -86,6 +121,10 @@ class EtatSortieManager
         return $stateOk && $this->now() < $sortie->getDateHeureDebut();
     }
 
+    /**
+     * Indique si une inscription est encore possible : sortie « Ouverte », avant la
+     * date limite et sous la capacité maximale.
+     */
     public function canRegister(Sortie $sortie): bool
     {
         if (!$this->isInState($sortie, self::OPEN)) {
@@ -98,11 +137,20 @@ class EtatSortieManager
         return $sortie->getInscrits()->count() < $sortie->getNbInscriptionMax();
     }
 
+    /**
+     * Indique si un désistement est encore possible (avant le début de la sortie).
+     */
     public function canWithdraw(Sortie $sortie): bool
     {
         return $this->now() < $sortie->getDateHeureDebut();
     }
 
+    /**
+     * Recalcule et applique l'état automatique d'une sortie selon la date courante
+     * et le nombre d'inscrits (clôture, passage en cours, terminée, historisée).
+     *
+     * @return bool true si l'état a changé
+     */
     public function refresh(Sortie $sortie): bool
     {
         $current = $sortie->getEtat()?->getLibelle();

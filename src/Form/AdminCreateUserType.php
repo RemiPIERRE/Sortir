@@ -13,6 +13,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Formulaire de création d'un utilisateur par un administrateur
+ * (expose campus, rôle administrateur et statut actif).
+ */
 class AdminCreateUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

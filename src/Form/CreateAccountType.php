@@ -20,6 +20,12 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
+/**
+ * Formulaire de complétion de compte après première connexion.
+ *
+ * N'expose volontairement ni « administrateur » ni « actif » : un utilisateur
+ * ne peut pas s'auto-attribuer de privilèges.
+ */
 class CreateAccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -10,6 +10,14 @@ use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Import en masse de participants depuis un fichier CSV (séparateur « ; »).
+ *
+ * En-tête attendu : email, password, campus, admin. Chaque ligne est validée
+ * individuellement (champs requis, email valide, doublons intra-fichier et en
+ * base, campus existant) ; les lignes fautives sont collectées sans interrompre
+ * l'import. Les mots de passe sont hashés avant persistance.
+ */
 class UserCsvImporter
 {
     private const REQUIRED_COLUMNS = ['email', 'password', 'campus', 'admin'];

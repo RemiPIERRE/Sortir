@@ -7,6 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * État du cycle de vie d'une sortie (En création, Ouverte, Clôturée, En cours,
+ * Terminée, Annulée, Historisée).
+ */
 #[ORM\Entity(repositoryClass: EtatRepository::class)]
 class Etat
 {

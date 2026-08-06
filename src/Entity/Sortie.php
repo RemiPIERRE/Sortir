@@ -8,6 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Une sortie : événement organisé par un participant et ouvert aux inscriptions.
+ *
+ * Porte ses dates, sa capacité, son lieu, son campus, son organisateur, ses
+ * inscrits et son état courant (voir EtatSortieManager pour les transitions).
+ */
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
 {

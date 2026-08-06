@@ -1,4 +1,6 @@
 {
+    "name": "remi/sortir",
+    "description": "Application web Sortir",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

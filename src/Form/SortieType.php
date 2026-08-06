@@ -23,6 +23,12 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Formulaire de création/édition d'une sortie.
+ *
+ * Champs non mappés (nouvelle ville / nouveau lieu) permettant de créer ces
+ * entités à la volée. N'expose pas l'organisateur, fixé côté contrôleur.
+ */
 class SortieType extends AbstractType
 {
     public function __construct(private readonly VilleRepository $villeRepository)

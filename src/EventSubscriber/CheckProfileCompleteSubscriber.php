@@ -9,13 +9,25 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Force la complétion du profil.
+ *
+ * À chaque requête principale, redirige tout utilisateur au profil incomplet vers
+ * la page de complétion de compte, sauf pour les routes techniques (préfixe « _ »)
+ * et les routes de connexion / déconnexion / complétion elles-mêmes.
+ */
 class CheckProfileCompleteSubscriber implements EventSubscriberInterface
 {
 
-public function __construct(
-    private VerifInfoUser $verifInfoUser,
-    private RouterInterface $router){}
+    public function __construct(
+        private VerifInfoUser   $verifInfoUser,
+        private RouterInterface $router)
+    {
+    }
 
+    /**
+     * Redirige vers la complétion de compte si le profil courant est incomplet.
+     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -39,6 +51,11 @@ public function __construct(
         }
     }
 
+    /**
+     * S'abonne à l'événement kernel.request.
+     *
+     * @return array<string, string>
+     */
     public static function getSubscribedEvents(): array
     {
         return [

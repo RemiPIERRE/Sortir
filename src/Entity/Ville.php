@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * Ville regroupant un ou plusieurs lieux.
+ */
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_VILLE_NOM_CP', fields: ['nom', 'codePostal'])]
 #[UniqueEntity(fields: ['nom', 'codePostal'], message: 'Cette ville avec ce code postal existe déjà.')]

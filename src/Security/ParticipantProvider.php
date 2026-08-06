@@ -14,6 +14,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 // security.yaml ne permet d'ajouter email ET pseudo, d'où ce fichier
 
 
+/**
+ * Fournisseur d'utilisateurs pour le firewall.
+ *
+ * Permet de s'authentifier indifféremment par email OU par pseudo — ce que la
+ * configuration standard de security.yaml ne permet pas — et prend en charge la
+ * mise à niveau transparente du hash de mot de passe.
+ */
 class ParticipantProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
 
