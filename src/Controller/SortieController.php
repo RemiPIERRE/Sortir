@@ -19,10 +19,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Gère le cycle de vie des sorties côté utilisateur : consultation, création,
+ * modification, publication, annulation, inscription et désistement.
+ *
+ * Tout l'accès est réservé aux utilisateurs authentifiés (ROLE_USER au niveau de
+ * la classe). Les actions sensibles (modifier, publier, annuler) délèguent le
+ * contrôle de propriété au SortieVoter, et les transitions d'état à
+ * EtatSortieManager.
+ */
 #[Route('/sortie', name: 'app_sortie_')]
 #[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
+    /**
+     * Affiche le détail d'une sortie et calcule les actions ouvertes au visiteur
+     * (peut s'inscrire / peut se désister) selon son état d'inscription.
+     */
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function afficherSortie(Sortie $sortie, EtatSortieManager $stateManager): Response
     {
@@ -38,6 +51,13 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche et traite le formulaire de création d'une sortie.
+     *
+     * L'organisateur est forcé à l'utilisateur courant. Permet de créer à la volée
+     * une ville et/ou un lieu si l'utilisateur en saisit un nouveau. Selon le bouton
+     * cliqué, la sortie est enregistrée en brouillon (« En création ») ou publiée.
+     */
     #[Route('/creer', name: 'create', methods: ['GET', 'POST'])]
     public function creer(
         Request                $request,
@@ -107,6 +127,14 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', ['form' => $form]);
     }
 
+    /**
+     * Affiche et traite le formulaire de modification d'une sortie.
+     *
+     * Réservé à l'organisateur (SortieVoter::EDIT). Refusé si l'état ne permet plus
+     * l'édition (voir EtatSortieManager::canBeEdited).
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
     #[Route('/{id}/modifier', name: 'modify', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifier(
         Sortie                 $sortie,
@@ -148,6 +176,13 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * Publie une sortie encore en brouillon (action POST protégée par jeton CSRF).
+     *
+     * Réservé à l'organisateur (SortieVoter::PUBLISH).
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
     #[Route('/{id}/publier', name: 'publish', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function publier(
         Sortie                 $sortie,
@@ -178,6 +213,14 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * Affiche (GET) puis traite (POST) l'annulation d'une sortie avec motif.
+     *
+     * Réservé à l'organisateur, ou à un administrateur (SortieVoter::CANCEL).
+     * Le POST est protégé par jeton CSRF ; le motif est obligatoire.
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
     #[Route('/{id}/annuler', name: 'cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function annuler(
         Sortie                 $sortie,
@@ -222,6 +265,12 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * Inscrit l'utilisateur courant à une sortie (POST protégé par jeton CSRF).
+     *
+     * Vérifie que l'inscription est encore possible (état, date limite, capacité)
+     * et qu'il n'est pas déjà inscrit.
+     */
     #[Route('/{id}/inscription', name: 'register', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function inscription(
         Sortie                 $sortie,
@@ -256,6 +305,12 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * Désinscrit l'utilisateur courant d'une sortie (POST protégé par jeton CSRF).
+     *
+     * Si la sortie était clôturée mais que la date limite n'est pas dépassée, elle
+     * est automatiquement rebasculée en « Ouverte ».
+     */
     #[Route('/{id}/desister', name: 'withdraw', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function desister(
         Sortie                 $sortie,
@@ -293,6 +348,13 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * Point d'entrée AJAX : renvoie en JSON les lieux d'une ville donnée.
+     *
+     * Utilisé pour peupler dynamiquement la liste des lieux dans le formulaire de sortie.
+     *
+     * @return JsonResponse Liste d'objets {id, nom}
+     */
     #[Route('/lieux/{id}', name: 'app_lieux_by_ville')]
     public function lieux(Ville $ville, LieuRepository $lieuRepository): JsonResponse
     {

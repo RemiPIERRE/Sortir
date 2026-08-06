@@ -178,3 +178,9 @@
     color: var(--etat-annulee);
     border: 1px solid rgba(178, 58, 58, 0.3);
 }
+
+.flash-reset_password_error {
+    background: rgba(178, 58, 58, 0.1);
+    color: var(--etat-annulee);
+    border: 1px solid rgba(178, 58, 58, 0.3);
+}

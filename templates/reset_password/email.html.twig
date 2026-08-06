@@ -1,9 +1,25 @@
-<h1>Bonjour !</h1>
+<h1 style="font-family: Georgia, 'Times New Roman', serif; color:#17324d;">Bonjour !</h1>
 
-<p>Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant</p>
+<p style="font-family: Arial, sans-serif; color:#333;">
+    Pour réinitialiser votre mot de passe sur <strong>sortir.com</strong>, cliquez sur le bouton ci-dessous :
+</p>
 
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+<p>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}"
+       style="display:inline-block; background:#e85d34; color:#ffffff; text-decoration:none;
+              font-family: Arial, sans-serif; font-weight:bold; padding:12px 22px; border-radius:8px;">
+        Réinitialiser mon mot de passe
+    </a>
+</p>
 
-<p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+<p style="font-family: Arial, sans-serif; color:#666; font-size:14px;">
+    Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :<br>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+</p>
 
-<p>Cordialement, l'équipe Sortir.com</p>
+<p style="font-family: Arial, sans-serif; color:#666; font-size:14px;">
+    Ce lien expirera dans
+    {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+</p>
+
+<p style="font-family: Arial, sans-serif; color:#333;">À bientôt,<br>L'équipe sortir.com</p>

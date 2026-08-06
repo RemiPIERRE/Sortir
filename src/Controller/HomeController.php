@@ -14,9 +14,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Page d'accueil : liste filtrable des sorties visibles par l'utilisateur.
+ */
 #[IsGranted('ROLE_USER')]
 final class HomeController extends AbstractController
 {
+    /**
+     * Affiche la liste des sorties, filtrée selon les critères de la requête.
+     *
+     * Rafraîchit d'abord l'état de toutes les sorties (transitions automatiques
+     * selon les dates). Sans filtre de campus explicite, on retombe sur le campus
+     * de rattachement de l'utilisateur.
+     *
+     * @todo Déplacer le rafraîchissement des états dans une commande planifiée (cron)
+     *       pour éviter des écritures en base sur une simple requête GET.
+     */
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(
         Request                $request,

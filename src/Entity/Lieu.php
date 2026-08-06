@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Lieu précis (rattaché à une ville) où se déroule une sortie.
+ */
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 class Lieu
 {

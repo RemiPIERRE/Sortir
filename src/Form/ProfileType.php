@@ -19,6 +19,12 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Formulaire d'édition de son propre profil.
+ *
+ * N'expose volontairement ni « administrateur » ni « actif » : réservés aux
+ * formulaires d'administration, pour éviter toute escalade de privilèges.
+ */
 class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

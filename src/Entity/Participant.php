@@ -12,6 +12,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * Utilisateur de l'application (membre d'un campus).
+ *
+ * Sert d'entité de sécurité : implémente UserInterface et
+ * PasswordAuthenticatedUserInterface. Peut organiser des sorties et s'y inscrire.
+ * Le rôle ROLE_ADMIN découle du booléen « administrateur ».
+ */
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà utilisé.')]
@@ -112,7 +119,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -161,8 +168,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function __serialize(): array
     {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data = (array)$this;
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -328,6 +335,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
+
     public function getPhotoFile(): ?File
     {
         return $this->photoFile;

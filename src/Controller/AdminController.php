@@ -28,10 +28,20 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Back-office d'administration : tableau de bord, gestion des campus, des
+ * utilisateurs (dont import CSV), des villes et des lieux.
+ *
+ * Intégralement réservé à ROLE_ADMIN (attribut de classe). Les suppressions et
+ * bascules d'état sont des actions POST protégées par jeton CSRF.
+ */
 #[Route('/admin', name: 'app_admin_')]
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
+    /**
+     * Tableau de bord : agrège les compteurs clés (sorties, utilisateurs, villes, campus).
+     */
     #[Route('', name: 'home', methods: ['GET'])]
     public function index(
         SortieRepository      $sortieRepository,
@@ -57,6 +67,9 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Liste les campus (avec recherche par nom) et traite la création d'un campus.
+     */
     #[Route('/campus', name: 'campus', methods: ['GET', 'POST'])]
     public function gererCampus(Request $request, EntityManagerInterface $em, CampusRepository $campusRepository): Response
     {
@@ -91,6 +104,9 @@ class AdminController extends AbstractController
 
     }
 
+    /**
+     * Affiche et traite le formulaire d'édition d'un campus.
+     */
     #[Route('/campus/{id}/edit', name: 'campus_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifierCampus(Request $request, EntityManagerInterface $em, Campus $campus): Response
     {
@@ -110,6 +126,11 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Supprime un campus (POST protégé par jeton CSRF).
+     *
+     * Garde-fou : refuse la suppression si des participants ou des sorties y sont rattachés.
+     */
     #[Route('/campus/{id}/delete', name: 'campus_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function supprimerCampus(Request $request, EntityManagerInterface $em, Campus $campus): Response
     {
@@ -135,6 +156,9 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_campus');
     }
 
+    /**
+     * Liste les utilisateurs avec recherche (nom, prénom, email) et filtre par campus.
+     */
     #[Route('/users', name: 'users', methods: ['GET'])]
     public function afficherListeUtilisateurs(
         Request               $request,
@@ -164,6 +188,9 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche et traite le formulaire d'édition d'un utilisateur par un administrateur.
+     */
     #[Route('/users/{id}/edit', name: 'user_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function modifierUtilisateur(Request $request, EntityManagerInterface $em, Participant $participant): Response
     {
@@ -185,6 +212,9 @@ class AdminController extends AbstractController
 
     }
 
+    /**
+     * Crée un utilisateur depuis le back-office (mot de passe hashé avant persistance).
+     */
     #[Route('/users/admin/add_user', name: 'add_user', methods: ['GET', 'POST'])]
     public function ajouterUtilisateur(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
     {
@@ -208,6 +238,11 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Active/désactive un compte utilisateur (POST protégé par jeton CSRF).
+     *
+     * Un compte désactivé est refusé à l'authentification (voir UserChecker).
+     */
     #[Route('/users/{id}/delete', name: 'user_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function supprimerUtilisateur(Request $request, EntityManagerInterface $em, Participant $participant): Response
     {
@@ -249,6 +284,10 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_users');
     }
 
+    /**
+     * Écran combiné villes + lieux : liste filtrable des deux et traite leurs
+     * formulaires de création respectifs.
+     */
     #[Route('/villes', name: 'villes', methods: ['GET', 'POST'])]
     public function gererVilles(
         Request                $request,
@@ -299,6 +338,9 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche et traite le formulaire d'édition d'une ville.
+     */
     #[Route('/villes/{id}/edit', name: 'edit_ville', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function editVille(Request $request, EntityManagerInterface $em, Ville $ville): Response
     {
@@ -312,6 +354,11 @@ class AdminController extends AbstractController
         return $this->render('admin/villes/edit_ville.html.twig', ['form' => $form, 'ville' => $ville]);
     }
 
+    /**
+     * Supprime une ville (POST protégé par jeton CSRF).
+     *
+     * Garde-fou : refuse la suppression si des lieux y sont rattachés.
+     */
     #[Route('/villes/{id}/delete', name: 'delete_ville', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function deleteVille(Request $request, EntityManagerInterface $em, Ville $ville): Response
     {
@@ -330,6 +377,9 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_villes');
     }
 
+    /**
+     * Affiche et traite le formulaire d'édition d'un lieu.
+     */
     #[Route('/lieux/{id}/edit', name: 'edit_lieu', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function editLieu(Request $request, EntityManagerInterface $em, Lieu $lieu): Response
     {
@@ -343,6 +393,11 @@ class AdminController extends AbstractController
         return $this->render('admin/villes/edit_lieu.html.twig', ['form' => $form, 'lieu' => $lieu]);
     }
 
+    /**
+     * Supprime un lieu (POST protégé par jeton CSRF).
+     *
+     * Garde-fou : refuse la suppression si des sorties y sont rattachées.
+     */
     #[Route('/lieux/{id}/delete', name: 'delete_lieu', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function deleteLieu(Request $request, EntityManagerInterface $em, Lieu $lieu): Response
     {
@@ -361,6 +416,12 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_villes');
     }
 
+    /**
+     * Importe en masse des utilisateurs depuis un fichier CSV (POST protégé par jeton CSRF).
+     *
+     * Valide l'extension du fichier puis délègue à UserCsvImporter. Le rapport
+     * d'import (créés / lignes rejetées) est restitué via messages flash et session.
+     */
     #[Route('/users/import', name: 'import_users', methods: ['POST'])]
     public function importerUtilisateurs(Request $request, UserCsvImporter $importer): Response
     {

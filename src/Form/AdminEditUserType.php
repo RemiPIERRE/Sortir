@@ -14,6 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Formulaire d'édition d'un utilisateur par un administrateur
+ * (seul endroit où « administrateur » et « actif » sont modifiables).
+ */
 class AdminEditUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
