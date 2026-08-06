@@ -27,7 +27,7 @@ class SortieRepository extends ServiceEntityRepository
      * $nonInscrit sont mutuellement exclusifs (si les deux sont vrais, aucun n'est appliqué).
      *
      * @param string|null $dateDebut Borne basse au format Y-m-d (incluse)
-     * @param string|null $dateFin   Borne haute au format Y-m-d (exclue au lendemain)
+     * @param string|null $dateFin Borne haute au format Y-m-d (exclue au lendemain)
      *
      * @return Sortie[]
      */
@@ -109,5 +109,40 @@ class SortieRepository extends ServiceEntityRepository
         return $queryBuilder
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Liste des sorties pour l'API : filtrable par état et par date prévue.
+     *
+     * Exclut toujours les sorties « En création » et « Terminée ».
+     *
+     * @return Sortie[]
+     */
+    public function findForApi(?string $etat, ?\DateTimeImmutable $date): array
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+
+        $queryBuilder
+            ->join('s.etat', 'e')
+            ->andWhere('e.libelle NOT IN (:etatsExclus)')
+            ->setParameter('etatsExclus', ['En création', 'Terminée'])
+            ->orderBy('s.dateHeureDebut', 'ASC');
+
+        if ($etat) {
+            $queryBuilder
+                ->andWhere('e.libelle = :etat')
+                ->setParameter('etat', $etat);
+        }
+
+        if ($date) {
+            $dateFin = $date->modify('+1 day');
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->andWhere('s.dateHeureDebut < :dateFin')
+                ->setParameter('dateDebut', $date)
+                ->setParameter('dateFin', $dateFin);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

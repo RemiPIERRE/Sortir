@@ -34,17 +34,26 @@ class CheckProfileCompleteSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $route = $event->getRequest()->attributes->get('_route');
-
-        if ($route === null || str_starts_with($route, '_') || in_array($route, ['app_profile_create_account', 'app_login', 'app_logout'], true)) {
+        $request = $event->getRequest();
+        
+        if (str_starts_with($request->getPathInfo(), '/api')) {
             return;
         }
 
+        $route = $request->attributes->get('_route');
 
-        $isComplete = $this->verifInfoUser->profileIsComplete();
+        if ($route === null || str_starts_with($route, '_') || in_array($route, [
+                'app_profile_create_account',
+                'app_login',
+                'app_logout',
+                'app_forgot_password_request',
+                'app_check_email',
+                'app_reset_password',
+            ], true)) {
+            return;
+        }
 
-
-        if (!$isComplete) {
+        if (!$this->verifInfoUser->profileIsComplete()) {
             $event->setResponse(new RedirectResponse(
                 $this->router->generate('app_profile_create_account')
             ));
